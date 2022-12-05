@@ -16,21 +16,17 @@
 </head>
 
 <!--From location look-up-->
-<body onload="init()">
-    <h1>Location Look Up</h1>
-    <label>Location: </label><input id="location" type="text" placeholder="enter location" style="width: 15rem;"/>
-    <br/><br/>
-    <button id="lookup" type="button">Look Up</button>
-    <br/><br/>
-    <div style="width: 50rem; padding: 0.25rem; border: solid 1px black; overflow: scroll;">
-        <h3 style="margin: 0;">Location Information</h3>
-        <ul id="result"></ul>
-    </div>
-</body>
+
 
 <body onload="initializeApp()">
     <!-- Main app (map, crime table, and filters) -->
-    <div id="app"></div>
+    <div id="app">
+    </div>
+
+    <!--<div style="width: 50rem; padding: 0.25rem; border: solid 1px black; overflow: scroll;">
+        <h3 style="margin: 0;">Location Information</h3>
+        <ul id="result"></ul>
+    </div>-->
     
     <!-- Foundation CSS Framework: include before closing <body> tag -->
     <script src="js/vendor.js"></script>

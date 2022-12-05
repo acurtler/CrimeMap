@@ -10,12 +10,14 @@ function initializeApp() {
     init = true;
 }
 
-function init() {
+/*function inititalizeLookup() {
     var lookup = document.getElementById('lookup');
     lookup.addEventListener('click', geoLocate, false);
-}
+}*/
 
-function geoLocate(event) {
+
+/*function geoLocate(event) {
+    console.log(event);
     let location = document.getElementById('location');
     let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value +
               '&format=json&limit=25&accept-language=en'
@@ -44,7 +46,7 @@ function getJSON(url, callback) {
     };
     req.open("GET", url, true);
     req.send();
-}
+}*/
 
 
 window.initializeApp = initializeApp;

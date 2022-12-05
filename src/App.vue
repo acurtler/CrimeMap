@@ -54,6 +54,18 @@ export default {
         viewAbout(event) {
             this.view = 'about';
         },
+        
+        geoLocate(event) {
+            console.log(event);
+            let location = document.getElementById('location');
+            let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value +
+              '&format=json&limit=1&accept-language=en';
+              this.getJSON(url).then( (data) => {
+                    console.log(data);
+              }).catch((error) => {
+                    console.log(error);
+              });
+        },
 
         getJSON(url) {
             return new Promise((resolve, reject) => {
@@ -124,6 +136,10 @@ export default {
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
                 <div id="leafletmap" class="cell auto"></div>
+            </div>
+            <div class="grid-x grid-padding-x">
+                <input id="location" class = "cell small-9" type="text" placeholder="enter location"/> 
+                <button id="lookup" class="cell small-3 button" type="button" @click="geoLocate">Look Up</button>
             </div>
         </div>
     </div>
