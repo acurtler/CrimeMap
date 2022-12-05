@@ -108,7 +108,6 @@ export default {
             maxZoom: 18
         }).addTo(this.leaflet.map);
         this.leaflet.map.setMaxBounds([[44.883658, -93.217977], [45.008206, -92.993787]]);
-
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
 
