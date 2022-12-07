@@ -1,6 +1,12 @@
 <script>
 import $ from 'jquery'
 
+/*import Vue from 'vue';
+import { MultiSelectPlugin } from "@syncfusion/ej2-vue-dropdowns";
+import { MultiSelect, CheckBoxSelection } from '@syncfusion/ej2-dropdowns';
+MultiSelect.Inject(CheckBoxSelection);
+Vue.use(MultiSelectPlugin);*/
+
 export default {
     data() {
         return {
@@ -38,8 +44,20 @@ export default {
                     {location: [44.913106, -93.170779], marker: null},
                     {location: [44.937705, -93.136997], marker: null},
                     {location: [44.949203, -93.093739], marker: null}
-                ]
-            }
+                ] 
+            },
+            /*neighborhood_names: [
+                    { Id: 'neighborhood1', Game: 'Badminton' },
+                    { Id: 'neighborhood2', Game: 'Football' },
+                    { Id: 'neighborhood3', Game: 'Tennis' },
+                    { Id: 'neighborhood4', Game: 'Golf' },
+                    { Id: 'neighborhood5', Game: 'Cricket' },
+                    { Id: 'neighborhood6', Game: 'Handball' },
+                    { Id: 'neighborhood7', Game: 'Karate' },
+                    { Id: 'neighborhood8', Game: 'Fencing' },
+                    { Id: 'neighborhood9', Game: 'Boxing' }
+                ],
+                fields : { text: 'Game', value: 'Id' }*/
         };
     },
     methods: {
@@ -61,7 +79,9 @@ export default {
             let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value +
               '&format=json&limit=1&accept-language=en';
               this.getJSON(url).then( (data) => {
-                    console.log(data);
+                    console.log('longitude is '+ data[0].lon);
+                    // use data and this.leaflet.map
+                    this.leaflet.map = L.map('leafletmap').setView([this.leaflet.center.data[0].lat, this.leaflet.center.data[0].lon], this.leaflet.zoom);
               }).catch((error) => {
                     console.log(error);
               });
@@ -142,6 +162,28 @@ export default {
                 <button id="lookup" class="cell small-3 button" type="button" @click="geoLocate">Look Up</button>
             </div>
         </div>
+        <div id="app">
+            <div id='container' style="margin:15px auto 0; width:250px;">
+            <br>
+            <ejs-multiselect id='multiselect' :dataSource='neighborhood_names' placeholder="Select a Neighborhood" mode="CheckBox" :fields='fields'></ejs-multiselect>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Case Number</th>
+                    <th>Incident Type</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Neighborhood Name</th>
+                    <th>Block</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
     <div v-if="view === 'new_incident'">
         <!-- Replace this with your actual form: can be done here or by making a new component -->
@@ -180,4 +222,10 @@ export default {
     text-align: center;
     cursor: pointer;
 }
+
+/*@import "../../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-vue-dropdowns/styles/material.css";
+@import "../../node_modules/@syncfusion/ej2-buttons/styles/material.css";*/
+
 </style>
