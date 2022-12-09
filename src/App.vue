@@ -1,9 +1,14 @@
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-vue-dropdowns/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
 <script>
 import $ from 'jquery'
 
 /*import Vue from 'vue';
 import { MultiSelectPlugin } from "@syncfusion/ej2-vue-dropdowns";
 import { MultiSelect, CheckBoxSelection } from '@syncfusion/ej2-dropdowns';
+
 MultiSelect.Inject(CheckBoxSelection);
 Vue.use(MultiSelectPlugin);*/
 
@@ -15,7 +20,7 @@ export default {
             codes: [],
             neighborhoods: [],
             incidents: [],
-            search_results: [],
+
             leaflet: {
                 map: null,
                 center: {
@@ -74,32 +79,6 @@ export default {
         viewAbout(event) {
             this.view = 'about';
         },
-
-       incidentSearch(event) {
-            let req = {
-                url: 'localhost:8000/incidents',
-                dataType: 'json',
-                success: this.incidentData
-            }
-            $.ajax(req);
-        },
-
-        incidentData(data) {
-            this.search_results = data.items;
-        },
-
-        /*neighborhoodSearch(event) {
-            let req = {
-                url: 'localhost:8000/neighborhoods',
-                dataType: 'json',
-                success: this.neighborhoodData
-            }
-            $.ajax(req);
-        },
-
-        neighborhoodData(data) {
-            this.search_results = search_results + data.items;
-        },*/
         
         geoLocate(event) {
             console.log(event);
@@ -116,6 +95,26 @@ export default {
               }).catch((error) => {
                     console.log(error);
               });
+        },
+
+        newIncident(event) {
+            console.log(event);
+            let case_number = document.getElementById('case_number');
+            let date = document.getElementById('date');
+            let time = document.getElementById('time');
+            let code = document.getElementById('code');
+            let incident = document.getElementById('incident');
+            let police_grid = document.getElementById('police_grid');
+            let neighborhood_number = document.getElementById('neighborhood_number');
+            let block = document.getElementById('block');
+            let url = "http://localhost:8000/new-incident?case_number=" + case_number + '&date_time=' + date + '\
+                T' + time + '&code=' + code + '&incident=' + incident + '&police_grid=' + police_grid + '\
+                &neighborhood_number=' + neighborhood_number + '&block=' + block;
+            this.getJSON(url).then( (data) => {
+                console.log(data);
+            }).catch((error) => {
+                console.log(error);
+            });
         },
 
         getJSON(url) {
@@ -162,6 +161,35 @@ export default {
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
 
+        let codePromise = this.getJSON('http://localhost:8000/codes');
+        let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
+        let incidentPromise = this.getJSON('http://localhost:8000/incidents');
+        let geoPromise = this.getJSON('/data/StPaulDistrictCouncil.geojson');
+
+
+        Promise.all([codePromise, neighborhoodPromise, incidentPromise, geoPromise]).then((results) => {
+            this.codes = results[0];
+            this.neighborhoods = results[1];
+            this.incidents = results[2];
+            $(results[3].features).each((key, value) => {
+                district_boundary.addData(value);
+            });
+        }).catch((error) => {
+            console.log('Error:', error);
+        });
+
+        /*this.getJSON('http://localhost:8000/codes').then((result) => {
+            this.codes = result;
+        }).catch((error) => {
+            console.log('Error:', error);
+        });
+
+        this.getJSON('http://localhost:8000/codes').then((result) => {
+            this.codes = result;
+        }).catch((error) => {
+            console.log('Error:', error);
+        });
+
         this.getJSON('/data/StPaulDistrictCouncil.geojson').then((result) => {
             // St. Paul GeoJSON
             $(result.features).each((key, value) => {
@@ -169,7 +197,7 @@ export default {
             });
         }).catch((error) => {
             console.log('Error:', error);
-        });
+        });*/
     }
 }
 </script>
@@ -192,12 +220,12 @@ export default {
                 <button id="lookup" class="cell small-3 button" type="button" @click="geoLocate">Look Up</button>
             </div>
         </div>
-        <div id="app">
+        <!--<div id="app">
             <div id='container' style="margin:15px auto 0; width:250px;">
             <br>
             <ejs-multiselect id='multiselect' :dataSource='neighborhood_names' placeholder="Select a Neighborhood" mode="CheckBox" :fields='fields'></ejs-multiselect>
             </div>
-        </div>
+        </div>-->
 
         <table>
             <thead>
@@ -211,22 +239,15 @@ export default {
                 </tr>
             </thead>
             <tbody>
-                <!--<tr v-if="(search_results !== '')" v-for="(item, index) in search_results">
+
+                <tr v-for="(item, index) in incidents">
                     <td>{{ item.case_number }}</td>
                     <td>{{ item.incident }}</td>
-                    <td>{{ item.date_time }}</td>
-                    <td>{{ item.date_time }}</td>
-                    <td>{{ item.neighborhood_name }}</td>
+                    <td>{{ item.date_time.split('T')[0] }}</td>
+                    <td>{{ item.date_time.split('T')[1] }}</td>
+                    <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
                     <td>{{ item.block }}</td>
                 </tr>
-                <tr v-if="(search_results == '')">
-                    <td>{{ item.case_number }}</td>
-                    <td>{{ item.incident }}</td>
-                    <td>{{ item.date_time }}</td>
-                    <td>{{ item.date_time }}</td>
-                    <td>{{ item.neighborhood_name }}</td>
-                    <td>{{ item.block }}</td>
-                </tr>-->
             </tbody>
         </table>
     </div>
@@ -237,6 +258,42 @@ export default {
                 <h1 class="cell auto">New Incident Form</h1>
             </div>
         </div>
+
+        <div class="grid-container">
+            <div class="grid-x grid-padding-x">
+                <div>
+                    <form @submit.prevent="submitForm" v-if="!formSubmitted">
+                        <span>Case Number</span><br>
+                        <input id="case_number" type="text" placeholder="Example: 11111111" /><br>
+
+                        <span>Date</span><br>
+                        <input id="date" type="email" placeholder="Example: 2022-05-31" /><br>
+
+                        <span>Time</span><br>
+                        <input id="time" type="email" placeholder="Example: 12:03:43" /><br>
+
+                        <span>Code</span><br>
+                        <input id="code" type="email" placeholder="Example: 110" /><br>
+
+                        <span>Incident</span><br>
+                        <input id="incident" type="email" placeholder="Example: Murder, Non Negligent Manslaughter" /><br>
+
+                        <span>Police Grid</span><br>
+                        <input id="police_grid" type="email" placeholder="Example: 87" /><br>
+
+                        <span>Neighborhood Number</span><br>
+                        <input id="neighborhood_number" type="email" placeholder="Example: 7" 
+                        /><br>
+
+                        <span>Block</span><br>
+                        <input id="block" type="email" placeholder="Example: THOMAS AV & VICTORIA" /><br>
+
+                        <button id="lookup" class="cell small-3 button" type="button" @click="newIncident">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
     <div v-if="view === 'about'">
         <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
@@ -268,9 +325,6 @@ export default {
     cursor: pointer;
 }
 
-/*@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
-@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
-@import "../node_modules/@syncfusion/ej2-vue-dropdowns/styles/material.css";
-@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";*/
+
 
 </style>
