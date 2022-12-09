@@ -11,9 +11,11 @@ export default {
     data() {
         return {
             view: 'map',
+            limit: 1000,
             codes: [],
             neighborhoods: [],
             incidents: [],
+            search_results: [],
             leaflet: {
                 map: null,
                 center: {
@@ -72,6 +74,32 @@ export default {
         viewAbout(event) {
             this.view = 'about';
         },
+
+       incidentSearch(event) {
+            let req = {
+                url: 'localhost:8000/incidents',
+                dataType: 'json',
+                success: this.incidentData
+            }
+            $.ajax(req);
+        },
+
+        incidentData(data) {
+            this.search_results = data.items;
+        },
+
+        /*neighborhoodSearch(event) {
+            let req = {
+                url: 'localhost:8000/neighborhoods',
+                dataType: 'json',
+                success: this.neighborhoodData
+            }
+            $.ajax(req);
+        },
+
+        neighborhoodData(data) {
+            this.search_results = search_results + data.items;
+        },*/
         
         geoLocate(event) {
             console.log(event);
@@ -80,8 +108,11 @@ export default {
               '&format=json&limit=1&accept-language=en';
               this.getJSON(url).then( (data) => {
                     console.log('longitude is '+ data[0].lon);
+                    console.log(data);
+                    let lat = data[0].lat;
+                    let lon = data[0].lon;
                     // use data and this.leaflet.map
-                    this.leaflet.map = L.map('leafletmap').setView([this.leaflet.center.data[0].lat, this.leaflet.center.data[0].lon], this.leaflet.zoom);
+                    this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);
               }).catch((error) => {
                     console.log(error);
               });
@@ -180,7 +211,22 @@ export default {
                 </tr>
             </thead>
             <tbody>
-
+                <!--<tr v-if="(search_results !== '')" v-for="(item, index) in search_results">
+                    <td>{{ item.case_number }}</td>
+                    <td>{{ item.incident }}</td>
+                    <td>{{ item.date_time }}</td>
+                    <td>{{ item.date_time }}</td>
+                    <td>{{ item.neighborhood_name }}</td>
+                    <td>{{ item.block }}</td>
+                </tr>
+                <tr v-if="(search_results == '')">
+                    <td>{{ item.case_number }}</td>
+                    <td>{{ item.incident }}</td>
+                    <td>{{ item.date_time }}</td>
+                    <td>{{ item.date_time }}</td>
+                    <td>{{ item.neighborhood_name }}</td>
+                    <td>{{ item.block }}</td>
+                </tr>-->
             </tbody>
         </table>
     </div>
