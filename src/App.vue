@@ -99,18 +99,27 @@ export default {
 
         newIncident(event) {
             console.log(event);
+            let intialdata = [];
             let case_number = document.getElementById('case_number');
+            intialdata.push(case_number);
             let date = document.getElementById('date');
+            intialdata.push(date);
             let time = document.getElementById('time');
+            intialdata.push(time);
             let code = document.getElementById('code');
+            intialdata.push(code);
             let incident = document.getElementById('incident');
+            intialdata.push(incident);
             let police_grid = document.getElementById('police_grid');
+            intialdata.push(police_grid);
             let neighborhood_number = document.getElementById('neighborhood_number');
+            intialdata.push(neighborhood_number);
             let block = document.getElementById('block');
+            intialdata.push(block);
             let url = "http://localhost:8000/new-incident?case_number=" + case_number + '&date_time=' + date + '\
                 T' + time + '&code=' + code + '&incident=' + incident + '&police_grid=' + police_grid + '\
                 &neighborhood_number=' + neighborhood_number + '&block=' + block;
-            this.getJSON(url).then( (data) => {
+            this.uploadJSON(put, url, intialdata).then( (data) => {
                 console.log(data);
             }).catch((error) => {
                 console.log(error);
