@@ -1,16 +1,10 @@
-@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
-@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
-@import "../node_modules/@syncfusion/ej2-vue-dropdowns/styles/material.css";
-@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
 <script>
 import $ from 'jquery'
 
-/*import Vue from 'vue';
-import { MultiSelectPlugin } from "@syncfusion/ej2-vue-dropdowns";
-import { MultiSelect, CheckBoxSelection } from '@syncfusion/ej2-dropdowns';
+/*import Vue from "vue";
+import { DropDownButtonPlugin } from "../node_modules/ej2-splitbuttons";
 
-MultiSelect.Inject(CheckBoxSelection);
-Vue.use(MultiSelectPlugin);*/
+Vue.use(DropDownButtonPlugin);*/
 
 export default {
     data() {
@@ -20,6 +14,11 @@ export default {
             codes: [],
             neighborhoods: [],
             incidents: [],
+            newIncidentInfo: [],
+            checkedNeighborhoods: [],
+            checkedIncidents: [],
+            max: [],
+            el: '...',
 
             leaflet: {
                 map: null,
@@ -53,18 +52,6 @@ export default {
                     {location: [44.949203, -93.093739], marker: null}
                 ] 
             },
-            /*neighborhood_names: [
-                    { Id: 'neighborhood1', Game: 'Badminton' },
-                    { Id: 'neighborhood2', Game: 'Football' },
-                    { Id: 'neighborhood3', Game: 'Tennis' },
-                    { Id: 'neighborhood4', Game: 'Golf' },
-                    { Id: 'neighborhood5', Game: 'Cricket' },
-                    { Id: 'neighborhood6', Game: 'Handball' },
-                    { Id: 'neighborhood7', Game: 'Karate' },
-                    { Id: 'neighborhood8', Game: 'Fencing' },
-                    { Id: 'neighborhood9', Game: 'Boxing' }
-                ],
-                fields : { text: 'Game', value: 'Id' }*/
         };
     },
     methods: {
@@ -91,7 +78,9 @@ export default {
                     let lat = data[0].lat;
                     let lon = data[0].lon;
                     // use data and this.leaflet.map
-                    this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);
+                    var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);
+                    this.leaflet.map.flyTo([data[0].lat, data[0].lon], 1);
+                    /*this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);*/
               }).catch((error) => {
                     console.log(error);
               });
@@ -99,27 +88,28 @@ export default {
 
         newIncident(event) {
             console.log(event);
-            let intialdata = [];
+            let initialdata = [];
             let case_number = document.getElementById('case_number');
-            intialdata.push(case_number);
+            initialdata.push(case_number);
             let date = document.getElementById('date');
-            intialdata.push(date);
+            initialdata.push(date);
             let time = document.getElementById('time');
-            intialdata.push(time);
+            initialdata.push(time);
             let code = document.getElementById('code');
-            intialdata.push(code);
+            initialdata.push(code);
             let incident = document.getElementById('incident');
-            intialdata.push(incident);
+            initialdata.push(incident);
             let police_grid = document.getElementById('police_grid');
-            intialdata.push(police_grid);
+            initialdata.push(police_grid);
             let neighborhood_number = document.getElementById('neighborhood_number');
-            intialdata.push(neighborhood_number);
+            initialdata.push(neighborhood_number);
             let block = document.getElementById('block');
-            intialdata.push(block);
+            initialdata.push(block);
+            /*let url = "http://localhost:8000/new-incident";*/
             let url = "http://localhost:8000/new-incident?case_number=" + case_number + '&date_time=' + date + '\
                 T' + time + '&code=' + code + '&incident=' + incident + '&police_grid=' + police_grid + '\
                 &neighborhood_number=' + neighborhood_number + '&block=' + block;
-            this.uploadJSON(put, url, intialdata).then( (data) => {
+            this.uploadJSON('PUT', url, initialdata).then( (data) => {
                 console.log(data);
             }).catch((error) => {
                 console.log(error);
@@ -175,6 +165,18 @@ export default {
         let incidentPromise = this.getJSON('http://localhost:8000/incidents');
         let geoPromise = this.getJSON('/data/StPaulDistrictCouncil.geojson');
 
+        console.log(this.checkedneighborhoods);
+
+        if (this.checkedNeighborhoods!='') {
+            console.log(this.checkedNeighborhoods);
+            for (i in this.checkedNeighborhoods) {
+                new_url = 'http://localhost:8000/incidents?neighborhood=' + this.checkedNeighborhoods[i];
+                if (i < this.checkedNeighborhoods.length) {
+                    new_url = new_url + ',';
+                }
+            }
+            incidentPromise = this.getJSON(new_url)
+        }
 
         Promise.all([codePromise, neighborhoodPromise, incidentPromise, geoPromise]).then((results) => {
             this.codes = results[0];
@@ -224,41 +226,120 @@ export default {
             <div class="grid-x grid-padding-x">
                 <div id="leafletmap" class="cell auto"></div>
             </div>
+
             <div class="grid-x grid-padding-x">
                 <input id="location" class = "cell small-9" type="text" placeholder="enter location"/> 
                 <button id="lookup" class="cell small-3 button" type="button" @click="geoLocate">Look Up</button>
             </div>
-        </div>
-        <!--<div id="app">
-            <div id='container' style="margin:15px auto 0; width:250px;">
-            <br>
-            <ejs-multiselect id='multiselect' :dataSource='neighborhood_names' placeholder="Select a Neighborhood" mode="CheckBox" :fields='fields'></ejs-multiselect>
+
+            <div class="grid-x grid-padding-x">
+                <div id="filters" class="cell small-3">
+                    <span><b>Filters</b></span>
+                    <br>
+                    <br>
+
+                    <span>Incident Type</span>
+                    <br>
+                        <input type="checkbox" id="homicide" value="Homicide" v-model="checkedIncidents"><label for="homicide">Homicide</label>
+                        <input type="checkbox" id="murder" value="Murder" v-model="checkedIncidents"><label for="murder">Murder</label>
+                        <input type="checkbox" id="rape" value="Rape" v-model="checkedIncidents"><label for="rape">Rape</label>
+                        <input type="checkbox" id="robbery" value="Robbery" v-model="checkedIncidents"><label for="robbery">Robbery</label>
+                        <input type="checkbox" id="aggravated assault" value="Aggravated Assault" v-model="checkedIncidents"><label for="aggravated assault">Aggravated Assault</label>
+                        <input type="checkbox" id="burglary" value="Burglary" v-model="checkedIncidents"><label for="">Burglary</label>
+                        <input type="checkbox" id="att. burglary" value="Att. Burglary" v-model="checkedIncidents"><label for="att. burglary">Attempted Burglary</label>
+                        <input type="checkbox" id="theft" value="Theft" v-model="checkedIncidents"><label for="theft">Theft</label>
+                        <input type="checkbox" id="arson" value="Arson" v-model="checkedIncidents"><label for="arson">Arson</label>
+                        <input type="checkbox" id="damage" value="Damage" v-model="checkedIncidents"><label for="damage">Damage to Property</label>
+                        <input type="checkbox" id="narcotics" value="Narcotics" v-model="checkedIncidents"><label for="narcotics">Narcotics</label>
+                        <input type="checkbox" id="weapon" value="Weapon" v-model="checkedIncidents"><label for="weapon">Weapon</label>
+                        <input type="checkbox" id="death_investigation" value="Death Investigation" v-model="checkedIncidents"><label for="death_investigation">Death Investigation</label>
+                        <input type="checkbox" id="police_visit" value="Police Visit" v-model="checkedIncidents"><label for="police_visit">Police Visit</label>
+                        <input type="checkbox" id="event" value="Engagement Event" v-model="checkedIncidents"><label for="event">Community Engagement Event</label>
+                        <input type="checkbox" id="foot_patrol" value="Foot Patrol" v-model="checkedIncidents"><label for="foot_patrol">Proactive Foot Patrol</label>
+                        <input type="checkbox" id="other" value="Other" v-model="checkedIncidents"><label for="other">Other</label>
+                    <br>
+                    
+                    <span>Neighborhoods</span>
+                    <br>
+                        <span class="border border-dark">
+                            <input type="checkbox" id="1" value="Conway/Battlecreek/Highwood" v-model="checkedNeighborhoods">
+                                <label for="1">Conway/Battlecreek/Highwood</label>
+                            <input type="checkbox" id="2" value="Greater East Side" v-model="checkedNeighborhoods">
+                                <label for="2">Greater East Side</label>
+                            <input type="checkbox" id="3" value="West Side" v-model="checkedNeighborhoods">
+                                <label for="3">West Side</label>
+                            <input type="checkbox" id="4" value="Dayton's Bluff" v-model="checkedNeighborhoods">
+                                <label for="4">Dayton's Bluff</label>
+                            <input type="checkbox" id="5" value="Payne/Phalen" v-model="checkedNeighborhoods">
+                                <label for="5">Payne/Phalen</label>
+                            <input type="checkbox" id="6" value="North End" v-model="checkedNeighborhoods">
+                                <label for="6">North End</label>
+                            <input type="checkbox" id="7" value="Thomas/Dale(Frogtown)" v-model="checkedNeighborhoods">
+                                <label for="7">Thomas/Dale(Frogtown)</label>
+                            <input type="checkbox" id="8" value="Summit/University" v-model="checkedNeighborhoods">
+                                <label for="8">Summit/University</label>
+                            <input type="checkbox" id="9" value="West Seventh" v-model="checkedNeighborhoods">
+                                <label for="9">West Seventh</label>
+                            <input type="checkbox" id="10" value="Como" v-model="checkedNeighborhoods">
+                                <label for="10">Como</label>
+                            <input type="checkbox" id="11" value="Hamline/Midway" v-model="checkedNeighborhoods">
+                                <label for="11">Hamline/Midway</label>
+                            <input type="checkbox" id="12" value="St. Anthony" v-model="checkedNeighborhoods">
+                                <label for="12">St. Anthony</label>
+                            <input type="checkbox" id="13" value="Union Park" v-model="checkedNeighborhoods">
+                                <label for="13">Union Park</label>
+                            <input type="checkbox" id="14" value="Macalester-Groveland" v-model="checkedNeighborhoods">
+                                <label for="14">Macalester-Groveland</label>
+                            <input type="checkbox" id="15" value="Highland" v-model="checkedNeighborhoods">
+                                <label for="15">Highland</label>
+                            <input type="checkbox" id="16" value="Summit Hill" v-model="checkedNeighborhoods">
+                                <label for="16">Summit Hill</label>
+                            <input type="checkbox" id="17" value="Capitol River" v-model="checkedNeighborhoods">
+                                <label for="17">Capitol River</label>
+                        </span>
+                    <br>
+
+                    <span>Date</span>
+                    <br>
+
+
+                    <span>Max Incidents</span>
+                    <br>
+                        <input type="checkbox" id="10" value="limit_10" v-model="max"><label for="10">10</label>
+                        <input type="checkbox" id="50" value="limit_50" v-model="max"><label for="50">50</label>
+                        <input type="checkbox" id="100" value="limit_100" v-model="max"><label for="100">100</label>
+                        <input type="checkbox" id="500" value="limit_500" v-model="max"><label for="500">500</label>
+
+
+                </div>
+                <div id="data" class="cell small-9">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Case Number</th>
+                                <th>Incident Type</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Neighborhood Name</th>
+                                <th>Block</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in incidents">
+                                <td>{{ item.case_number }}</td>
+                                <td>{{ item.incident }}</td>
+                                <td>{{ item.date_time.split('T')[0] }}</td>
+                                <td>{{ item.date_time.split('T')[1] }}</td>
+                                <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
+                                <td>{{ item.block }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>-->
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Case Number</th>
-                    <th>Incident Type</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Neighborhood Name</th>
-                    <th>Block</th>
-                </tr>
-            </thead>
-            <tbody>
+        </div>
 
-                <tr v-for="(item, index) in incidents">
-                    <td>{{ item.case_number }}</td>
-                    <td>{{ item.incident }}</td>
-                    <td>{{ item.date_time.split('T')[0] }}</td>
-                    <td>{{ item.date_time.split('T')[1] }}</td>
-                    <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
-                    <td>{{ item.block }}</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
     <div v-if="view === 'new_incident'">
         <!-- Replace this with your actual form: can be done here or by making a new component -->
@@ -271,7 +352,6 @@ export default {
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
                 <div>
-                    <form @submit.prevent="submitForm" v-if="!formSubmitted">
                         <span>Case Number</span><br>
                         <input id="case_number" type="text" placeholder="Example: 11111111" /><br>
 
@@ -296,9 +376,7 @@ export default {
 
                         <span>Block</span><br>
                         <input id="block" type="email" placeholder="Example: THOMAS AV & VICTORIA" /><br>
-
                         <button id="lookup" class="cell small-3 button" type="button" @click="newIncident">Submit</button>
-                    </form>
                 </div>
             </div>
         </div>
