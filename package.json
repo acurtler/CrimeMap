@@ -30,6 +30,7 @@
     "@syncfusion/ej2-vue-dropdowns": "^20.3.60",
     "@syncfusion/ej2-vue-grids": "^20.3.60",
     "jquery": "^3.6.1",
+    "v-calendar": "^2.4.1",
     "vue": "^3.2.45"
   },
   "devDependencies": {

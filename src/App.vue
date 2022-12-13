@@ -1,10 +1,12 @@
 <script>
 import $ from 'jquery'
 
-/*import Vue from "vue";
-import { DropDownButtonPlugin } from "../node_modules/ej2-splitbuttons";
+/*import Calendar from 'v-calendar/lib/components/calendar.umd'
+import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
-Vue.use(DropDownButtonPlugin);*/
+// Register components in your 'main.js'
+Vue.component('calendar', Calendar)
+Vue.component('date-picker', DatePicker)*/
 
 export default {
     data() {
@@ -19,6 +21,11 @@ export default {
             checkedIncidents: [],
             max: [],
             el: '...',
+            /*components: {
+                Calendar,
+                DatePicker,
+                date: new Date(),
+            },*/
 
             leaflet: {
                 map: null,
@@ -165,15 +172,26 @@ export default {
         let incidentPromise = this.getJSON('http://localhost:8000/incidents');
         let geoPromise = this.getJSON('/data/StPaulDistrictCouncil.geojson');
 
-        console.log(this.checkedneighborhoods);
+        let url = "http://localhost:8000/incidents"
 
-        if (this.checkedNeighborhoods!='') {
-            console.log(this.checkedNeighborhoods);
-            for (i in this.checkedNeighborhoods) {
-                new_url = 'http://localhost:8000/incidents?neighborhood=' + this.checkedNeighborhoods[i];
-                if (i < this.checkedNeighborhoods.length) {
+        this.checkedNeighborhoods = this.checkedNeighborhoods.join(',');
+        console.log(this.checkedNeighborhoods);
+
+        /*if (this.checkedNeighborhoods.length>0) {
+            console.log('neighborhoods are ' + this.checkedNeighborhoods);
+            for (let i=0; i<this.checkedNeighborhoods.length; i++) {
+                new_url = url + '?neighborhood=' + this.checkedNeighborhoods[i];
+                if (i != this.checkedNeighborhoods.length - 1) {
                     new_url = new_url + ',';
                 }
+            }
+            incidentPromise = this.getJSON(new_url)
+        }*/
+
+        if (this.max.length>0) {
+            console.log('max incidents is ' + this.max);
+            for (i in this.max) {
+                new_url = 'http://localhost:8000/incidents?limit=' + this.max[i];
             }
             incidentPromise = this.getJSON(new_url)
         }
@@ -261,7 +279,7 @@ export default {
                     
                     <span>Neighborhoods</span>
                     <br>
-                        <span class="border border-dark">
+                        <div class="neighborhoods" :style="'border border-dark'">
                             <input type="checkbox" id="1" value="Conway/Battlecreek/Highwood" v-model="checkedNeighborhoods">
                                 <label for="1">Conway/Battlecreek/Highwood</label>
                             <input type="checkbox" id="2" value="Greater East Side" v-model="checkedNeighborhoods">
@@ -296,10 +314,12 @@ export default {
                                 <label for="16">Summit Hill</label>
                             <input type="checkbox" id="17" value="Capitol River" v-model="checkedNeighborhoods">
                                 <label for="17">Capitol River</label>
-                        </span>
+                        </div>
                     <br>
 
                     <span>Date</span>
+                    <br>
+                        <!--<v-date-picker v-model="range" is-range />-->
                     <br>
 
 
@@ -309,7 +329,7 @@ export default {
                         <input type="checkbox" id="50" value="limit_50" v-model="max"><label for="50">50</label>
                         <input type="checkbox" id="100" value="limit_100" v-model="max"><label for="100">100</label>
                         <input type="checkbox" id="500" value="limit_500" v-model="max"><label for="500">500</label>
-
+                    
 
                 </div>
                 <div id="data" class="cell small-9">
@@ -410,6 +430,9 @@ export default {
     border: solid 1px white;
     text-align: center;
     cursor: pointer;
+}
+.neighborhoods {
+    border: 2rem;
 }
 
 
