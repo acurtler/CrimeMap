@@ -20,7 +20,7 @@ export default {
                 case_number: "",
 
             },
-            checkedNeighborhoods: [],
+            checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
             checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
             max: [],
             el: '...',
@@ -263,23 +263,23 @@ export default {
                     
                     <span><u>Neighborhoods</u>:</span>
                     <br>
-                            <input type="checkbox" id="1" value="Conway/Battlecreek/Highwood" v-model="checkedNeighborhoods"><label for="1">Conway/Battlecreek/Highwood</label> <br>
-                            <input type="checkbox" id="2" value="Greater East Side" v-model="checkedNeighborhoods"><label for="2">Greater East Side</label><br>
-                            <input type="checkbox" id="3" value="West Side" v-model="checkedNeighborhoods"><label for="3">West Side</label><br>
-                            <input type="checkbox" id="4" value="Dayton's Bluff" v-model="checkedNeighborhoods"><label for="4">Dayton's Bluff</label><br>
-                            <input type="checkbox" id="5" value="Payne/Phalen" v-model="checkedNeighborhoods"><label for="5">Payne/Phalen</label><br>
-                            <input type="checkbox" id="6" value="North End" v-model="checkedNeighborhoods"><label for="6">North End</label><br>
-                            <input type="checkbox" id="7" value="Thomas/Dale(Frogtown)" v-model="checkedNeighborhoods"><label for="7">Thomas/Dale(Frogtown)</label><br>
-                            <input type="checkbox" id="8" value="Summit/University" v-model="checkedNeighborhoods"><label for="8">Summit/University</label><br>
-                            <input type="checkbox" id="9" value="West Seventh" v-model="checkedNeighborhoods"><label for="9">West Seventh</label><br>
-                            <input type="checkbox" id="10" value="Como" v-model="checkedNeighborhoods"><label for="10">Como</label><br>
-                            <input type="checkbox" id="11" value="Hamline/Midway" v-model="checkedNeighborhoods"><label for="11">Hamline/Midway</label><br>
-                            <input type="checkbox" id="12" value="St. Anthony" v-model="checkedNeighborhoods"><label for="12">St. Anthony</label><br>
-                            <input type="checkbox" id="13" value="Union Park" v-model="checkedNeighborhoods"><label for="13">Union Park</label><br>
-                            <input type="checkbox" id="14" value="Macalester-Groveland" v-model="checkedNeighborhoods"><label for="14">Macalester-Groveland</label><br>
-                            <input type="checkbox" id="15" value="Highland" v-model="checkedNeighborhoods"><label for="15">Highland</label><br>
-                            <input type="checkbox" id="16" value="Summit Hill" v-model="checkedNeighborhoods"><label for="16">Summit Hill</label><br>
-                            <input type="checkbox" id="17" value="Capitol River" v-model="checkedNeighborhoods"><label for="17">Capitol River</label><br>
+                            <input type="checkbox" id="1" value="Conway/Battlecreek/Highwood" v-model="checkedNeighborhoods[0]"><label for="1">Conway/Battlecreek/Highwood</label> <br>
+                            <input type="checkbox" id="2" value="Greater East Side" v-model="checkedNeighborhoods[1]"><label for="2">Greater East Side</label><br>
+                            <input type="checkbox" id="3" value="West Side" v-model="checkedNeighborhoods[2]"><label for="3">West Side</label><br>
+                            <input type="checkbox" id="4" value="Dayton's Bluff" v-model="checkedNeighborhoods[3]"><label for="4">Dayton's Bluff</label><br>
+                            <input type="checkbox" id="5" value="Payne/Phalen" v-model="checkedNeighborhoods[4]"><label for="5">Payne/Phalen</label><br>
+                            <input type="checkbox" id="6" value="North End" v-model="checkedNeighborhoods[5]"><label for="6">North End</label><br>
+                            <input type="checkbox" id="7" value="Thomas/Dale(Frogtown)" v-model="checkedNeighborhoods[6]"><label for="7">Thomas/Dale(Frogtown)</label><br>
+                            <input type="checkbox" id="8" value="Summit/University" v-model="checkedNeighborhoods[7]"><label for="8">Summit/University</label><br>
+                            <input type="checkbox" id="9" value="West Seventh" v-model="checkedNeighborhoods[8]"><label for="9">West Seventh</label><br>
+                            <input type="checkbox" id="10" value="Como" v-model="checkedNeighborhoods[9]"><label for="10">Como</label><br>
+                            <input type="checkbox" id="11" value="Hamline/Midway" v-model="checkedNeighborhoods[10]"><label for="11">Hamline/Midway</label><br>
+                            <input type="checkbox" id="12" value="St. Anthony" v-model="checkedNeighborhoods[11]"><label for="12">St. Anthony</label><br>
+                            <input type="checkbox" id="13" value="Union Park" v-model="checkedNeighborhoods[12]"><label for="13">Union Park</label><br>
+                            <input type="checkbox" id="14" value="Macalester-Groveland" v-model="checkedNeighborhoods[13]"><label for="14">Macalester-Groveland</label><br>
+                            <input type="checkbox" id="15" value="Highland" v-model="checkedNeighborhoods[14]"><label for="15">Highland</label><br>
+                            <input type="checkbox" id="16" value="Summit Hill" v-model="checkedNeighborhoods[15]"><label for="16">Summit Hill</label><br>
+                            <input type="checkbox" id="17" value="Capitol River" v-model="checkedNeighborhoods[16]"><label for="17">Capitol River</label><br>
                     <br>
 
                     <span><u>Date</u>:</span>
