@@ -17,7 +17,7 @@ export default {
             neighborhoods: [],
             incidents: [],
             newIncident: [],
-            checkedNeighborhoods: [],
+            checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
             checkedIncidents: [],
             max: [],
             el: '...',
@@ -174,7 +174,7 @@ export default {
 
         let url = "http://localhost:8000/incidents"
 
-        this.checkedNeighborhoods = this.checkedNeighborhoods.join(',');
+        //this.checkedNeighborhoods = this.checkedNeighborhoods.join(',');
         console.log(this.checkedNeighborhoods);
 
         /*if (this.checkedNeighborhoods.length>0) {
@@ -280,13 +280,13 @@ export default {
                     <span>Neighborhoods</span>
                     <br>
                         <div class="neighborhoods" :style="'border border-dark'">
-                            <input type="checkbox" id="1" value="Conway/Battlecreek/Highwood" v-model="checkedNeighborhoods">
+                            <input type="checkbox" id="1" value="Conway/Battlecreek/Highwood" v-model="checkedNeighborhoods[0]">
                                 <label for="1">Conway/Battlecreek/Highwood</label>
-                            <input type="checkbox" id="2" value="Greater East Side" v-model="checkedNeighborhoods">
+                            <input type="checkbox" id="2" value="Greater East Side" v-model="checkedNeighborhoods[1]">
                                 <label for="2">Greater East Side</label>
-                            <input type="checkbox" id="3" value="West Side" v-model="checkedNeighborhoods">
+                            <input type="checkbox" id="3" value="West Side" v-model="checkedNeighborhoods[2]">
                                 <label for="3">West Side</label>
-                            <input type="checkbox" id="4" value="Dayton's Bluff" v-model="checkedNeighborhoods">
+                            <input type="checkbox" id="4" value="Dayton's Bluff" v-model="checkedNeighborhoods[3]">
                                 <label for="4">Dayton's Bluff</label>
                             <input type="checkbox" id="5" value="Payne/Phalen" v-model="checkedNeighborhoods">
                                 <label for="5">Payne/Phalen</label>
