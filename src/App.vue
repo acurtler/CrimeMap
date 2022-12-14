@@ -18,7 +18,13 @@ export default {
             incidents: [],
             new_incident: {
                 case_number: "",
-
+                date: "",
+                time: "",
+                code: "",
+                incident: "",
+                police_grid: "",
+                neighborhood_number: "",
+                block: ""
             },
             checkedNeighborhoods: [],
             checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
@@ -342,26 +348,26 @@ export default {
                         <br>
 
                         <span>Date</span><br>
-                        <input id="date" type="text" placeholder="Example: 2022-05-31" v-model="new_incident"/><br><label for="date"></label>
+                        <input id="date" type="text" placeholder="Example: 2022-05-31" v-model="new_incident.date"/><br><label for="date"></label>
 
                         <span>Time</span><br>
-                        <input id="time" type="text" placeholder="Example: 12:03:43" v-model="new_incident"/><br><label for="time"></label>
+                        <input id="time" type="text" placeholder="Example: 12:03:43" v-model="new_incident.time"/><br><label for="time"></label>
 
                         <span>Code</span><br>
-                        <input id="code" type="text" placeholder="Example: 110" v-model="new_incident"/><br>
+                        <input id="code" type="text" placeholder="Example: 110" v-model="new_incident.code"/><br>
 
                         <span>Incident</span><br>
-                        <input id="incident" type="text" placeholder="Example: Murder, Non Negligent Manslaughter" v-model="new_incident"/><br>
+                        <input id="incident" type="text" placeholder="Example: Murder, Non Negligent Manslaughter" v-model="new_incident.incident"/><br>
 
                         <span>Police Grid</span><br>
-                        <input id="police_grid" type="text" placeholder="Example: 87" v-model="new_incident"/><br>
+                        <input id="police_grid" type="text" placeholder="Example: 87" v-model="new_incident.police_grid"/><br>
 
                         <span>Neighborhood Number</span><br>
-                        <input id="neighborhood_number" type="text" placeholder="Example: 7" v-model="new_incident"/>
+                        <input id="neighborhood_number" type="text" placeholder="Example: 7" v-model="new_incident.neighborhood_number"/>
                         <br>
 
                         <span>Block</span><br>
-                        <input id="block" type="text" placeholder="Example: THOMAS AV & VICTORIA" v-model="new_incident"/>
+                        <input id="block" type="text" placeholder="Example: THOMAS AV & VICTORIA" v-model="new_incident.block"/>
                         <br>
                         <span>new incident has: {{ new_incident }}</span>
 
