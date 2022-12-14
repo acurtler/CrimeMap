@@ -16,7 +16,7 @@ export default {
             codes: [],
             neighborhoods: [],
             incidents: [],
-            newIncidentInfo: [],
+            newIncident: [],
             checkedNeighborhoods: [],
             checkedIncidents: [],
             max: [],
@@ -95,7 +95,7 @@ export default {
 
         newIncident(event) {
             console.log(event);
-            let initialdata = [];
+            /*let initialdata = [];
             let case_number = document.getElementById('case_number');
             initialdata.push(case_number);
             let date = document.getElementById('date');
@@ -111,12 +111,12 @@ export default {
             let neighborhood_number = document.getElementById('neighborhood_number');
             initialdata.push(neighborhood_number);
             let block = document.getElementById('block');
-            initialdata.push(block);
-            /*let url = "http://localhost:8000/new-incident";*/
-            let url = "http://localhost:8000/new-incident?case_number=" + case_number + '&date_time=' + date + '\
+            initialdata.push(block);*/
+            let url = "http://localhost:8000/new-incident";
+            /*let url = "http://localhost:8000/new-incident?case_number=" + case_number + '&date_time=' + date + '\
                 T' + time + '&code=' + code + '&incident=' + incident + '&police_grid=' + police_grid + '\
-                &neighborhood_number=' + neighborhood_number + '&block=' + block;
-            this.uploadJSON('PUT', url, initialdata).then( (data) => {
+                &neighborhood_number=' + neighborhood_number + '&block=' + block;*/
+            this.uploadJSON('PUT', url, this.newIncident).then( (data) => {
                 console.log(data);
             }).catch((error) => {
                 console.log(error);
@@ -373,29 +373,30 @@ export default {
             <div class="grid-x grid-padding-x">
                 <div>
                         <span>Case Number</span><br>
-                        <input id="case_number" type="text" placeholder="Example: 11111111" /><br>
+                        <input id="case_number" type="text" placeholder="Example: 11111111" v-model="newIncident"/><br>
 
                         <span>Date</span><br>
-                        <input id="date" type="email" placeholder="Example: 2022-05-31" /><br>
+                        <input id="date" type="email" placeholder="Example: 2022-05-31" v-model="newIncident"/><br>
 
                         <span>Time</span><br>
-                        <input id="time" type="email" placeholder="Example: 12:03:43" /><br>
+                        <input id="time" type="email" placeholder="Example: 12:03:43" v-model="newIncident"/><br>
 
                         <span>Code</span><br>
-                        <input id="code" type="email" placeholder="Example: 110" /><br>
+                        <input id="code" type="email" placeholder="Example: 110" v-model="newIncident"/><br>
 
                         <span>Incident</span><br>
-                        <input id="incident" type="email" placeholder="Example: Murder, Non Negligent Manslaughter" /><br>
+                        <input id="incident" type="email" placeholder="Example: Murder, Non Negligent Manslaughter" v-model="newIncident"/><br>
 
                         <span>Police Grid</span><br>
-                        <input id="police_grid" type="email" placeholder="Example: 87" /><br>
+                        <input id="police_grid" type="email" placeholder="Example: 87" v-model="newIncident"/><br>
 
                         <span>Neighborhood Number</span><br>
-                        <input id="neighborhood_number" type="email" placeholder="Example: 7" 
-                        /><br>
+                        <input id="neighborhood_number" type="email" placeholder="Example: 7" v-model="newIncident"/>
+                        <br>
 
                         <span>Block</span><br>
-                        <input id="block" type="email" placeholder="Example: THOMAS AV & VICTORIA" /><br>
+                        <input id="block" type="email" placeholder="Example: THOMAS AV & VICTORIA" v-model="newIncident"/><br>
+
                         <button id="lookup" class="cell small-3 button" type="button" @click="newIncident">Submit</button>
                 </div>
             </div>
