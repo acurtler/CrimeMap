@@ -26,8 +26,10 @@ export default {
                 neighborhood_number: "",
                 block: ""
             },
-            checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
-            checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+            checkedNeighborhoods: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            checkedIncidents: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            /*checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
+            /*checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             max: [],
             el: '...',
             /*components: {
@@ -83,6 +85,41 @@ export default {
             this.view = 'about';
         },
         
+        setFilter(event) {
+            let codePromise = this.getJSON('http://localhost:8000/codes');
+            let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
+            let incidentPromise = this.getJSON('http://localhost:8000/incidents');
+
+            if (this.max.length>0) {
+                for (let i=0; i<this.max.length; i++) {
+                    let incidentPromise = this.getJSON('http://localhost:8000/incidents?limit=' + this.max[i]);
+                }
+            }
+
+            for (let i=0; i<this.checkedNeighborhoods.length; i++) {
+                if (this.checkedNeighborhoods[i] == 'true') {
+                    let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods?name='+this.checkedNeighborhoods[i]);
+                }
+            }
+
+            for (let i=0; i<this.checkedIncidents.length; i++) {
+                if (this.checkedIncidents[i] == 'true') {
+                    let codePromise = this.getJSON('http://localhost:8000/codes');
+                }
+            }
+
+            Promise.all([codePromise, neighborhoodPromise, incidentPromise, geoPromise]).then((results) => {
+                this.codes = results[0];
+                this.neighborhoods = results[1];
+                this.incidents = results[2];
+                $(results[3].features).each((key, value) => {
+                    district_boundary.addData(value);
+                });
+            }).catch((error) => {
+                console.log('Error:', error);
+            });
+        },
+
         geoLocate(event) {
             console.log(event);
             console.log(this.checkedIncidents);
@@ -164,27 +201,11 @@ export default {
 
         let url = "http://localhost:8000/incidents"
 
-        /*this.checkedNeighborhoods = this.checkedNeighborhoods.join(',');*/
-        console.log(this.checkedNeighborhoods);
+        /*for (let i=0; i<this.checkedNeighborhoods.length; i++) {
+            if (this.checkedNeighborhoods[i] = 'true') {
 
-        /*if (this.checkedNeighborhoods.length>0) {
-            console.log('neighborhoods are ' + this.checkedNeighborhoods);
-            for (let i=0; i<this.checkedNeighborhoods.length; i++) {
-                new_url = url + '?neighborhood=' + this.checkedNeighborhoods[i];
-                if (i != this.checkedNeighborhoods.length - 1) {
-                    new_url = new_url + ',';
-                }
             }
-            incidentPromise = this.getJSON(new_url)
         }*/
-
-        if (this.max.length>0) {
-            console.log('max incidents is ' + this.max);
-            for (i in this.max) {
-                new_url = 'http://localhost:8000/incidents?limit=' + this.max[i];
-            }
-            incidentPromise = this.getJSON(new_url)
-        }
 
         Promise.all([codePromise, neighborhoodPromise, incidentPromise, geoPromise]).then((results) => {
             this.codes = results[0];
@@ -296,11 +317,12 @@ export default {
 
                     <span><u>Max Incidents</u>:</span>
                     <br>
-                        <input type="checkbox" id="10" value="limit_10" v-model="max"><label for="10">10</label>
-                        <input type="checkbox" id="50" value="limit_50" v-model="max"><label for="50">50</label>
-                        <input type="checkbox" id="100" value="limit_100" v-model="max"><label for="100">100</label>
-                        <input type="checkbox" id="500" value="limit_500" v-model="max"><label for="500">500</label>
-                    
+                        <input type="radio" id="10" value="limit_10" v-model="max"><label for="10">10</label>
+                        <input type="radio" id="50" value="limit_50" v-model="max"><label for="50">50</label>
+                        <input type="radio" id="100" value="limit_100" v-model="max"><label for="100">100</label>
+                        <input type="radio" id="500" value="limit_500" v-model="max"><label for="500">500</label>
+
+                    <button id="lookup" class="cell small-3 button" type="button" @click="setFilter">Apply Filters</button>
 
                 </div>
                 <div id="data" class="cell small-9">
