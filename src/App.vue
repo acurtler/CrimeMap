@@ -197,6 +197,12 @@ export default {
             console.log('Error:', error);
         });
 
+        /*for(i=0;i<this.neighborhoods.length;i++) {
+            var marker = L.marker([neighborhoods[i].lat, neighborhoods[i].lon]);
+            marker.addTo(this.leaflet.map);
+            marker.bindPopup(neighborhoods[i].incidents.length);
+        }*/
+
         /*this.getJSON('http://localhost:8000/codes').then((result) => {
             this.codes = result;
         }).catch((error) => {
@@ -316,7 +322,7 @@ export default {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item, index) in incidents">
+                            <tr v-for="item in incidents">
                                 <td>{{ item.case_number }}</td>
                                 <td>{{ item.incident }}</td>
                                 <td>{{ item.date_time.split('T')[0] }}</td>
