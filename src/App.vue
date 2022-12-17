@@ -106,11 +106,133 @@ export default {
             let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
             let incidentPromise = this.getJSON('http://localhost:8000/incidents');
 
+            console.log('checked neighborhoods: ' + this.checkedNeighborhoods);
+            let filtered_neighborhoods = "";
+            let n_count = 0;
             for (let i=0; i<this.checkedNeighborhoods.length; i++) {
-                if (this.checkedNeighborhoods[i] == 'true') {
-                    let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods?name='+this.neighborhoods[i]);
+                if (this.checkedNeighborhoods[i] == true) {
+                    if (i==0) {
+                        filtered_neighborhoods = filtered_neighborhoods + "1";
+                        n_count++;
+                    }
+                    else if (i==1) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "2";
+                        n_count++;
+                    }
+                    else if (i==2) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "3";
+                        n_count++;
+                    }
+                    else if (i==3) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "4";
+                        n_count++;
+                    }
+                    else if (i==4) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "5";
+                        n_count++;
+                    }
+                    else if (i==5) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "6";
+                        n_count++;
+                    }
+                    else if (i==6) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "7";
+                        n_count++;
+                    }
+                    else if (i==7) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "8";
+                        n_count++;
+                    }
+                    else if (i==8) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "9";
+                        n_count++;
+                    }
+                    else if (i==9) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "10";
+                        n_count++;
+                    }
+                    else if (i==10) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "11";
+                        n_count++;
+                    }
+                    else if (i==11) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "12";
+                        n_count++;
+                    }
+                    else if (i==12) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "13";
+                        n_count++;
+                    }
+                    else if (i==13) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "14";
+                        n_count++;
+                    }
+                    else if (i==14) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "15";
+                        n_count++;
+                    }
+                    else if (i==15) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "16";
+                        n_count++;
+                    }
+                    else if (i==16) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "17";
+                        n_count++;
+                    }
+                
+                    /*let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods?name='+this.neighborhoods[i]);*/
                 }
             }
+
+            console.log("neighborhood numbers: " + filtered_neighborhoods);
 
             console.log("homicide: " + this.murder);
             let filtered_codes = "";
@@ -228,18 +350,38 @@ export default {
 
             console.log("filtered codes are " + filtered_codes);
             console.log("max is " + this.max);
+            //if there is a code filter
             if (filtered_codes.length > 0 ) {
                 incident_url = incident_url + "?code=" + filtered_codes;
+                //if there is a code filter and a limit filter
                 if (this.max.length>0) {
                     incidentPromise = this.getJSON(incident_url + "&limit=" + this.max);
+                    //if there is a code, limit, and neighborhood filter
+                    if (filtered_neighborhoods.length > 0) {
+                        incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
+                    }
+                //if there is a code filter and a neighborhood filter, but no limit
+                } else if (filtered_neighborhoods.length >0) {
+                    incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
                 }
+                //if there is no limit or neighborhood filter, just codes filter
                 incidentPromise = this.getJSON(incident_url);
             }
+
+            //if there are no codes filters
             else if (filtered_codes.length<=0 ) {
+                //no codes, just limit
                 if (this.max.length>0) {
-                    for (let i=0; i<this.max.length; i++) {
-                        incidentPromise = this.getJSON(incident_url + "?limit=" + this.max[i]);
+                        incidentPromise = this.getJSON(incident_url + "?limit=" + this.max);
+                        
+                    //if there are limit and neighborhoods filters
+                    if (filtered_neighborhoods.length > 0) {
+                        incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
                     }
+
+                //if there are no codes or limit filters, just neighborhoods
+                } else if (filtered_neighborhoods.length > 0) {
+                    incident_url = incident_url + "?neighborhood_number=" + filtered_neighborhoods;
                 }
             }
 
