@@ -355,14 +355,14 @@ export default {
                 incident_url = incident_url + "?code=" + filtered_codes;
                 //if there is a code filter and a limit filter
                 if (this.max.length>0) {
-                    incidentPromise = this.getJSON(incident_url + "&limit=" + this.max);
+                    incident_url = incident_url + "&limit=" + this.max;
                     //if there is a code, limit, and neighborhood filter
                     if (filtered_neighborhoods.length > 0) {
-                        incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
+                        incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
                     }
                 //if there is a code filter and a neighborhood filter, but no limit
                 } else if (filtered_neighborhoods.length >0) {
-                    incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
+                    incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
                 }
                 //if there is no limit or neighborhood filter, just codes filter
                 incidentPromise = this.getJSON(incident_url);
@@ -372,17 +372,18 @@ export default {
             else if (filtered_codes.length<=0 ) {
                 //no codes, just limit
                 if (this.max.length>0) {
-                        incidentPromise = this.getJSON(incident_url + "?limit=" + this.max);
+                        incident_url = incident_url + "?limit=" + this.max;
                         
                     //if there are limit and neighborhoods filters
                     if (filtered_neighborhoods.length > 0) {
-                        incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
+                        incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
                     }
 
                 //if there are no codes or limit filters, just neighborhoods
                 } else if (filtered_neighborhoods.length > 0) {
-                    incident_url = incident_url + "?neighborhood_number=" + filtered_neighborhoods;
+                    incident_url = incident_url + "?neighborhood=" + filtered_neighborhoods;
                 }
+                incidentPromise=this.getJSON(incident_url);
             }
 
 
