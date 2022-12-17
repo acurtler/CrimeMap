@@ -15,6 +15,7 @@ export default {
             limit: 1000,
             codes: [],
             neighborhoods: [],
+            place_holder: 'Enter Location',
             incidents: [],
             new_incident: {
                 case_number: "",
@@ -28,8 +29,7 @@ export default {
             },
             checkedNeighborhoods: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
             checkedIncidents: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            homicide: [100],
-            murder: [110, 120],
+            homicide: [100, 110, 120],
             rape: [210, 220],
             robbery: [300, 311, 312, 313, 314, 321, 322, 323, 324, 331, 333, 334, 341, 342, 343, 344, 351, 352, 353, 354, 361, 363, 364, 371, 372, 373, 374],
             assault: [400, 411, 412, 420, 421, 422, 430, 431, 432, 440, 441, 442, 450, 451, 452, 453, 810, 861, 862, 863],
@@ -116,71 +116,124 @@ export default {
             let filtered_codes = "";
 
             console.log('value is ' + this.checkedIncidents);
-
+            let count = 0;
             for (let i=0; i<this.checkedIncidents.length; i++) {
                 if (this.checkedIncidents[i] == true) {
-                    console.log('hello');
-
-                    if (i=0) {
+                    if (i==0) {
                         filtered_codes = filtered_codes + this.homicide;
+                        count++;
                     }
-                    else if (i=1) {
-                        filtered_codes = filtered_codes + this.murder;
-                    }
-                    else if (i=2) {
+                    else if (i==1) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.rape;
+                        count++;
                     }
-                    else if (i=3) {
+                    else if (i==2) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.robbery;
+                        count++;
                     }
-                    else if (i=4) {
+                    else if (i==3) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.assault;
+                        count++;
                     }
-                    else if (i=5) {
+                    else if (i==4) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.burglary;
+                        count++;
                     }
-                    else if (i=6) {
+                    else if (i==5) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.theft;
+                        count++;
                     }
-                    else if (i=7) {
+                    else if (i==6) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.arson;
+                        count++;
                     }
-                    else if (i=8) {
+                    else if (i==7) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.damage;
+                        count++;
                     }
-                    else if (i=9) {
+                    else if (i==8) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.narcotics;
+                        count++;
                     }
-                    else if (i=10) {
+                    else if (i==9) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.weapon;
+                        count++;
                     }
-                    else if (i=11) {
+                    else if (i==10) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.death;
+                        count++;
                     }
-                    else if (i=12) {
+                    else if (i==11) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.police;
+                        count++;
                     }
-                    else if (i=13) {
+                    else if (i==12) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.engagement;
+                        count++;
                     }
-                    else if (i=14) {
+                    else if (i==13) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.patrol;
+                        count++;
                     }
-                    else if (i=15) {
+                    else if (i==14) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
                         filtered_codes = filtered_codes + this.other;
+                        count++;
                     }
                 }
             }
 
             let incident_url = "http://localhost:8000/incidents";
 
+            console.log("filtered codes are " + filtered_codes);
+            console.log("max is " + this.max);
             if (filtered_codes.length > 0 ) {
-                incident_url = "?codes=" + filtered_codes;
+                incident_url = incident_url + "?code=" + filtered_codes;
                 if (this.max.length>0) {
-                    for (let i=0; i<this.max.length; i++) {
-                        incidentPromise = this.getJSON(incident_url + "&limit=" + this.max[i]);
-                    }
+                    incidentPromise = this.getJSON(incident_url + "&limit=" + this.max);
                 }
+                incidentPromise = this.getJSON(incident_url);
             }
             else if (filtered_codes.length<=0 ) {
                 if (this.max.length>0) {
@@ -207,7 +260,7 @@ export default {
             console.log(event);
             console.log(this.checkedIncidents);
             let location = document.getElementById('location');
-            let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value +
+            let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value + ',St.Paul,MN' +
               '&format=json&limit=1&accept-language=en';
               this.getJSON(url).then( (data) => {
                     console.log('longitude is '+ data[0].lon);
@@ -215,8 +268,14 @@ export default {
                     let lat = data[0].lat;
                     let lon = data[0].lon;
                     // use data and this.leaflet.map
-                    var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);
-                    this.leaflet.map.flyTo([data[0].lat, data[0].lon], 1);
+                    /*var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);*/
+                    /*this.leaflet.center([data[0].lat, data[0].lon], 1);*/
+                    L.map('leafletmap') = this.leaflet.map.setView([data[0].lat, data[0].lon], 15);
+                    var marker = L.marker([lat, lon],{}).addTo(this.leaflet.map);
+                    /*this.leaflet.map.flyTo([lat, lon], zoom);*/
+                    this.leaflet.map.on('moveend', function() {
+                        console.log(this.leaflet.map);
+                    });
                     /*this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);*/
               }).catch((error) => {
                     console.log(error);
@@ -231,6 +290,20 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+        },
+
+        remove: function() {
+            let delete_url = "http://localhost:8000/remove-incident";
+
+            element.addEventListener("click", remove_incident);
+
+            function remove_incident() {
+                this.uploadJSON('DELETE', delete_url).then( (data) => {
+                console.log(data);
+                }).catch((error) => {
+                    console.log(error);
+                });
+                }
         },
 
         getJSON(url) {
@@ -348,7 +421,7 @@ export default {
             </div>
 
             <div class="grid-x grid-padding-x">
-                <input id="location" class = "cell small-9" type="text" placeholder="enter location"/> 
+                <input id="location" class = "cell small-9" type="text" placeholder={{place_holder}}/> 
                 <button id="lookup" class="cell small-3 button" type="button" @click="geoLocate">Look Up</button>
             </div>
 
@@ -361,21 +434,20 @@ export default {
                     <span><u>Incident Type</u>:</span>
                     <br>
                         <input type="checkbox" id="homicide" value="Homicide" v-model="checkedIncidents[0]"><label for="homicide">Homicide</label><br>
-                        <input type="checkbox" id="murder" value="Murder" v-model="checkedIncidents[1]"><label for="murder">Murder</label><br>
-                        <input type="checkbox" id="rape" value="Rape" v-model="checkedIncidents[2]"><label for="rape">Rape</label><br>
-                        <input type="checkbox" id="robbery" value="Robbery" v-model="checkedIncidents[3]"><label for="robbery">Robbery</label><br>
-                        <input type="checkbox" id="aggravated assault" value="Aggravated Assault" v-model="checkedIncidents[4]"><label for="aggravated assault">Assault</label><br>
-                        <input type="checkbox" id="burglary" value="Burglary" v-model="checkedIncidents[5]"><label for="">Burglary</label><br>
-                        <input type="checkbox" id="theft" value="Theft" v-model="checkedIncidents[6]"><label for="theft">Theft</label><br>
-                        <input type="checkbox" id="arson" value="Arson" v-model="checkedIncidents[7]"><label for="arson">Arson</label><br>
-                        <input type="checkbox" id="damage" value="Damage" v-model="checkedIncidents[8]"><label for="damage">Damage to Property</label><br>
-                        <input type="checkbox" id="narcotics" value="Narcotics" v-model="checkedIncidents[9]"><label for="narcotics">Narcotics</label><br>
-                        <input type="checkbox" id="weapon" value="Weapon" v-model="checkedIncidents[10]"><label for="weapon">Weapon</label><br>
-                        <input type="checkbox" id="death_investigation" value="Death Investigation" v-model="checkedIncidents[11]"><label for="death_investigation">Death Investigation</label><br>
-                        <input type="checkbox" id="police_visit" value="Police Visit" v-model="checkedIncidents[12]"><label for="police_visit">Police Visit</label><br>
-                        <input type="checkbox" id="event" value="Engagement Event" v-model="checkedIncidents[13]"><label for="event">Community Engagement Event</label><br>
-                        <input type="checkbox" id="foot_patrol" value="Foot Patrol" v-model="checkedIncidents[14]"><label for="foot_patrol">Proactive Foot Patrol</label><br>
-                        <input type="checkbox" id="other" value="Other" v-model="checkedIncidents[15]"><label for="other">Other</label><br>
+                        <input type="checkbox" id="rape" value="Rape" v-model="checkedIncidents[1]"><label for="rape">Rape</label><br>
+                        <input type="checkbox" id="robbery" value="Robbery" v-model="checkedIncidents[2]"><label for="robbery">Robbery</label><br>
+                        <input type="checkbox" id="aggravated assault" value="Aggravated Assault" v-model="checkedIncidents[3]"><label for="aggravated assault">Assault</label><br>
+                        <input type="checkbox" id="burglary" value="Burglary" v-model="checkedIncidents[4]"><label for="">Burglary</label><br>
+                        <input type="checkbox" id="theft" value="Theft" v-model="checkedIncidents[5]"><label for="theft">Theft</label><br>
+                        <input type="checkbox" id="arson" value="Arson" v-model="checkedIncidents[6]"><label for="arson">Arson</label><br>
+                        <input type="checkbox" id="damage" value="Damage" v-model="checkedIncidents[7]"><label for="damage">Damage to Property</label><br>
+                        <input type="checkbox" id="narcotics" value="Narcotics" v-model="checkedIncidents[8]"><label for="narcotics">Narcotics</label><br>
+                        <input type="checkbox" id="weapon" value="Weapon" v-model="checkedIncidents[9]"><label for="weapon">Weapon</label><br>
+                        <input type="checkbox" id="death_investigation" value="Death Investigation" v-model="checkedIncidents[10]"><label for="death_investigation">Death Investigation</label><br>
+                        <input type="checkbox" id="police_visit" value="Police Visit" v-model="checkedIncidents[11]"><label for="police_visit">Police Visit</label><br>
+                        <input type="checkbox" id="event" value="Engagement Event" v-model="checkedIncidents[12]"><label for="event">Community Engagement Event</label><br>
+                        <input type="checkbox" id="foot_patrol" value="Foot Patrol" v-model="checkedIncidents[13]"><label for="foot_patrol">Proactive Foot Patrol</label><br>
+                        <input type="checkbox" id="other" value="Other" v-model="checkedIncidents[14]"><label for="other">Other</label><br>
                     <br>
                     
                     <span><u>Neighborhoods</u>:</span>
@@ -407,10 +479,10 @@ export default {
 
                     <span><u>Max Incidents</u>:</span>
                     <br>
-                        <input type="radio" id="10" value="limit_10" v-model="max"><label for="10">10</label>
-                        <input type="radio" id="50" value="limit_50" v-model="max"><label for="50">50</label>
-                        <input type="radio" id="100" value="limit_100" v-model="max"><label for="100">100</label>
-                        <input type="radio" id="500" value="limit_500" v-model="max"><label for="500">500</label>
+                        <input type="radio" id="10" value="10" v-model="max"><label for="10">10</label>
+                        <input type="radio" id="50" value="50" v-model="max"><label for="50">50</label>
+                        <input type="radio" id="100" value="100" v-model="max"><label for="100">100</label>
+                        <input type="radio" id="500" value="500" v-model="max"><label for="500">500</label>
 
                     <button id="lookup" class="cell small-3 button" type="button" @click="setFilter">Apply Filters</button>
 
@@ -425,16 +497,18 @@ export default {
                                 <th>Time</th>
                                 <th>Neighborhood Name</th>
                                 <th>Block</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item in incidents">
-                                <td>{{ item.case_number }}</td>
+                                <td style="{backgroundColor: red}">{{ item.case_number }}</td>
                                 <td>{{ item.incident }}</td>
                                 <td>{{ item.date }}</td>
                                 <td>{{ item.time }}</td>
                                 <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
                                 <td>{{ item.block }}</td>
+                                <td><button type="button" id="delete_button" onclick="remove()">Delete</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -521,7 +595,9 @@ export default {
 .neighborhoods {
     border: 2rem;
 }
-
+.violent {
+    background-color:red;
+}
 
 
 </style>

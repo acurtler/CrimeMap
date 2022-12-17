@@ -5585,4 +5585,8 @@ html.is-reveal-open {
     .show-for-portrait {
       display: block !important; } }
 
+.violent {
+    background-color:red;
+}
+
 /*# sourceMappingURL=foundation.css.map */
