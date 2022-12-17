@@ -431,8 +431,8 @@ export default {
                             <tr v-for="item in incidents">
                                 <td>{{ item.case_number }}</td>
                                 <td>{{ item.incident }}</td>
-                                <td>{{ item.date_time.split('T')[0] }}</td>
-                                <td>{{ item.date_time.split('T')[1] }}</td>
+                                <td>{{ item.date }}</td>
+                                <td>{{ item.time }}</td>
                                 <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
                                 <td>{{ item.block }}</td>
                             </tr>
