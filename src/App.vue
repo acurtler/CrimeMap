@@ -878,8 +878,26 @@ export default {
         <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <h1 class="cell auto">About the Project</h1>
+                <h1 class="cell auto text-center">About the Project</h1>
             </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+                <div class="cell small-4 text-center">
+                    <h1 class="cell auto">Lizzie P.</h1>
+                    <img src="" alt="Picture of Lizzie"/>
+                    <br>
+                    <p>Hello! I am a junior at St. Thomas studying Applied Math with a minor in Computer Science.</p>
+                </div>
+                <div class="cell small-4 text-center">
+                    <h1 class="cell auto">Anna C.</h1>
+                    <img src="" alt="Picture of Anna"/>
+                    <p>Hello</p>
+                </div>
+                <div class="cell small-4 text-center">
+                    <h1 class="cell auto">Lizzie M.</h1>
+                    <img src="" alt="Picture of Lizzie"/>
+                    <p>Hello</p>
+                </div>
         </div>
     </div>
 </template>
