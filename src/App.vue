@@ -44,9 +44,14 @@ export default {
             engagement: [9959],
             patrol: [9986],
             other: [614],
+            isViolent: true,
+            isProperty: false,
+            isOther: false,
             /*checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             /*checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             max: [],
+            startDate: "",
+            endDate: "",
             el: '...',
             /*components: {
                 Calendar,
@@ -100,6 +105,7 @@ export default {
         viewAbout(event) {
             this.view = 'about';
         },
+
         
         setFilter(event) {
             let codePromise = this.getJSON('http://localhost:8000/codes');
@@ -346,43 +352,153 @@ export default {
                 }
             }
 
+            
+
             let incident_url = "http://localhost:8000/incidents";
+
+
 
             console.log("filtered codes are " + filtered_codes);
             console.log("max is " + this.max);
             //if there is a code filter
             if (filtered_codes.length > 0 ) {
                 incident_url = incident_url + "?code=" + filtered_codes;
-                //if there is a code filter and a limit filter
+                //if there is a code filter and a limit filter, check for dates
                 if (this.max.length>0) {
-                    incidentPromise = this.getJSON(incident_url + "&limit=" + this.max);
-                    //if there is a code, limit, and neighborhood filter
+                    incident_url = incident_url + "&limit=" + this.max;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                    //if there is a code, limit, and neighborhood filter, check for dates
                     if (filtered_neighborhoods.length > 0) {
-                        incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
+                        incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
                     }
-                //if there is a code filter and a neighborhood filter, but no limit
+                //if there is a code filter and a neighborhood filter and dates, but no limit
                 } else if (filtered_neighborhoods.length >0) {
-                    incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
+                    incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
                 }
-                //if there is no limit or neighborhood filter, just codes filter
+                //if there is no limit or neighborhood filter, just codes filter and dates
+                if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                else if (this.endDate.length > 0) {
+                    incident_url = incident_url + "&start_date=" + "2014-08-14";
+                    incident_url = incident_url + "&end_date=" + this.endDate;
+                }
                 incidentPromise = this.getJSON(incident_url);
             }
 
             //if there are no codes filters
             else if (filtered_codes.length<=0 ) {
-                //no codes, just limit
+                //no codes, just limit, check for dates
                 if (this.max.length>0) {
-                        incidentPromise = this.getJSON(incident_url + "?limit=" + this.max);
-                        
-                    //if there are limit and neighborhoods filters
+                        incident_url = incident_url + "?limit=" + this.max;
+                        if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                    //if there are limit and neighborhoods filters, check for dates
                     if (filtered_neighborhoods.length > 0) {
-                        incident_url = incident_url + "&neighborhood_number=" + filtered_neighborhoods;
+                        incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
+                        if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
                     }
 
-                //if there are no codes or limit filters, just neighborhoods
+                //if there are no codes or limit filters, just neighborhoods, check for dates
                 } else if (filtered_neighborhoods.length > 0) {
-                    incident_url = incident_url + "?neighborhood_number=" + filtered_neighborhoods;
+                    incident_url = incident_url + "?neighborhood=" + filtered_neighborhoods;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+
+                //if there are no codes, limits, neighborhoods filters, just dates
+                } else if(this.startDate.length > 0){
+                    incident_url = incident_url + "?start_date=" + this.startDate;
+                    //has startDate and end Date
+                    if (this.endDate.length > 0) {
+                        incident_url = incident_url + "&end_date=" + this.endDate;
+                        //has start date but no end date input
+                    } else {
+                        incident_url = incident_url + "&end_date=" + "2022-05-31";
+                    }
                 }
+                //has an endDate but no startDate, no does, limits, neighborhoods
+                else if (this.endDate.length > 0) {
+                    incident_url = incident_url + "?start_date=" + "2014-08-14";
+                    incident_url = incident_url + "&end_date=" + this.endDate;
+                }
+                incidentPromise=this.getJSON(incident_url);
             }
 
 
@@ -432,6 +548,7 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+            alert('Thanks for your submission.');
         },
 
         remove: function() {
@@ -569,16 +686,38 @@ export default {
 
             <div class="grid-x grid-padding-x">
                 <div id="filters" class="cell small-3">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>Crime Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td :style="{background:'#d94f45'}"></td>
+                                <td>Violent</td>
+                            </tr>
+                            <tr>
+                                <td :style="{background:'#90c5de'}"></td>
+                                <td>Property</td>
+                            </tr>
+                            <tr>
+                                <td :style="{background:'#f5eeb5'}"></td>
+                                <td>Other</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <span><b>Search by Filter:</b></span>
                     <br>
                     <br>
 
                     <span><u>Incident Type</u>:</span>
                     <br>
-                        <input type="checkbox" id="homicide" value="Homicide" v-model="checkedIncidents[0]"><label for="homicide">Homicide</label><br>
-                        <input type="checkbox" id="rape" value="Rape" v-model="checkedIncidents[1]"><label for="rape">Rape</label><br>
+                        <input type="checkbox" id="violent" value="Homicide" v-model="checkedIncidents[0]"><label for="homicide">Homicide</label><br>
+                        <input type="checkbox" id="violent" value="Rape" v-model="checkedIncidents[1]"><label for="rape">Rape</label><br>
                         <input type="checkbox" id="robbery" value="Robbery" v-model="checkedIncidents[2]"><label for="robbery">Robbery</label><br>
-                        <input type="checkbox" id="aggravated assault" value="Aggravated Assault" v-model="checkedIncidents[3]"><label for="aggravated assault">Assault</label><br>
+                        <input type="checkbox" id="violent" value="Aggravated Assault" v-model="checkedIncidents[3]"><label for="aggravated assault">Assault</label><br>
                         <input type="checkbox" id="burglary" value="Burglary" v-model="checkedIncidents[4]"><label for="">Burglary</label><br>
                         <input type="checkbox" id="theft" value="Theft" v-model="checkedIncidents[5]"><label for="theft">Theft</label><br>
                         <input type="checkbox" id="arson" value="Arson" v-model="checkedIncidents[6]"><label for="arson">Arson</label><br>
@@ -614,7 +753,12 @@ export default {
                     <br>
 
                     <span><u>Date</u>:</span>
+                    <p>Please enter date in "YYYY-MM-DD" form</p>
                     <br>
+                        <p>Start Date</p>
+                        <input type="text" placeholder="Example: 2014-08-14" id="start_date" v-model="startDate"><br>
+                        <p>End Date</p>
+                        <input type="text" placeholder="Example: 2022-05-31" id="end_date" v-model="endDate"><br>
                         <!--<v-date-picker v-model="range" is-range />-->
                     <br>
 
@@ -644,6 +788,7 @@ export default {
                         </thead>
                         <tbody>
                             <tr v-for="item in incidents">
+                            <template v-for="item in incidents"><tr :style="{ background: item.code >=100 && item.code <=220 || item.code >= 400 && item.code <= 453 || item.code >= 810 && item.code <= 863 ? '#d94f45' : item.code >= 300 && item.code <= 374 || item.code >= 500 && item.code <= 566 || item.code >= 600 && item.code <= 732 || item.code >= 900 && item.code <= 982 || item.code >= 1400 && item.code <= 1436 ? '#90c5de' : '#f5eeb5'}">
                                 <td>{{ item.case_number }}</td>
                                 <td>{{ item.incident }}</td>
                                 <td>{{ item.date }}</td>
@@ -655,6 +800,7 @@ export default {
 
                                 <td><button type="button" id="delete_button" onclick="remove()">Delete</button></td>
                             </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
