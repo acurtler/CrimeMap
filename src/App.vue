@@ -567,6 +567,7 @@ export default {
         },
 
         remove(event, index) {
+            alert("Deleting incident...");
             let delete_url = "http://localhost:8000/remove-incident";
             this.delete_incident.case_number = event;
             console.log('event is ' + this.delete_incident.case_number);
@@ -776,7 +777,7 @@ export default {
                     <br>
 
                     <span><u>Date</u>:</span>
-                    <p>Please enter date in "YYYY-MM-DD" form</p>
+                    <p>Please enter date in "YYYY-MM-DD" format.</p>
                     <br>
                         <p>Start Date</p>
                         <input type="text" placeholder="Example: 2014-08-14" id="start_date" v-model="startDate"><br>
