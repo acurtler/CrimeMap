@@ -1,13 +1,6 @@
 <script>
 import $ from 'jquery'
 
-/*import Calendar from 'v-calendar/lib/components/calendar.umd'
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
-
-// Register components in your 'main.js'
-Vue.component('calendar', Calendar)
-Vue.component('date-picker', DatePicker)*/
-
 export default {
     data() {
         return {
@@ -50,18 +43,10 @@ export default {
             isViolent: true,
             isProperty: false,
             isOther: false,
-            /*checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
-            /*checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             max: [],
             startDate: "",
             endDate: "",
             el: '...',
-            /*components: {
-                Calendar,
-                DatePicker,
-                date: new Date(),
-            },*/
-
             leaflet: {
                 map: null,
                 center: {
@@ -515,8 +500,6 @@ export default {
         },
 
         geoLocate(event) {
-            console.log(event);
-            console.log(this.checkedIncidents);
             let location = document.getElementById('location');
             let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value + ',St.Paul,MN' +
               '&format=json&limit=1&accept-language=en';
@@ -528,16 +511,48 @@ export default {
                     // use data and this.leaflet.map
                     /*var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);*/
                     /*this.leaflet.center([data[0].lat, data[0].lon], 1);*/
-                    L.map('leafletmap') = this.leaflet.map.setView([data[0].lat, data[0].lon], 15);
+                    this.leaflet.map = this.leaflet.map.setView([data[0].lat, data[0].lon], 15);
                     var marker = L.marker([lat, lon],{}).addTo(this.leaflet.map);
                     /*this.leaflet.map.flyTo([lat, lon], zoom);*/
-                    this.leaflet.map.on('moveend', function() {
-                        console.log(this.leaflet.map);
-                    });
+                    /*move(event) {
+                        document.getElementById("lookup").placeholder = "Enter Location";
+
+                    }*/
+                    this.leaflet.map('moveend', move);
                     /*this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);*/
               }).catch((error) => {
                     console.log(error);
               });
+        },
+
+        markIncident(event) {
+            let event_split = event.block.split(' ');
+            let address_number = event_split[0];
+            let individual_number = address_number.split('');
+            let number = "";
+            let street = "";
+            for (let i=0; i<individual_number.length; i++) {
+                if (individual_number[i].toString() == 'X') {
+                    individual_number[i] = '0';
+                }
+                number = number + individual_number[i];
+            }
+            for (let i=1; i<event_split.length; i++) {
+                street = street + event_split[i] + ' ';
+            }
+            let full_street = number + ' ' + street;
+            let final_street = full_street.toLocaleLowerCase();
+            console.log(final_street);
+
+            let url = 'https://nominatim.openstreetmap.org/search?q=' + final_street + ',St.Paul,MN' +
+              '&format=json&limit=10&accept-language=en';
+            this.getJSON(url).then( (data) => {
+                console.log(data);
+                var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);
+                /*addPopups(data[0].lat, data[0].lon, event.date, event.time, event.incident);*/
+            }).catch((error) => {
+                    console.log(error);
+            });
         },
 
         newIncident(event) {
@@ -690,7 +705,7 @@ export default {
             </div>
 
             <div class="grid-x grid-padding-x">
-                <input id="location" class = "cell small-9" type="text" placeholder={{place_holder}}/> 
+                <input id="location" class = "cell small-9" type="text"/> 
                 <button id="lookup" class="cell small-3 button" type="button" @click="geoLocate">Look Up</button>
             </div>
 
@@ -802,7 +817,7 @@ export default {
                                     <td class="table">{{ item.date }}</td>
                                     <td class="table">{{ item.time }}</td>
                                     <td class="table">{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
-                                    <td class="table">{{ item.block }}</td>
+                                    <td class="table"><button type="button" v-on:click="markIncident(item)">{{ item.block }}</button></td>
                                     <td class="delete"><button type="button" id="delete_button" v-on:click="remove(item.case_number, index)">Delete</button></td>
                                 </tr>
                             </template>
@@ -900,6 +915,11 @@ export default {
     cursor: pointer;
     border-style: solid;
     border-color: black;
+}
+.block {
+    border-style: solid;
+    border-color: black;
+    cursor: pointer;
 }
 
 </style>
