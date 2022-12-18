@@ -50,6 +50,8 @@ export default {
             /*checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             /*checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             max: [],
+            startDate: "",
+            endDate: "",
             el: '...',
             /*components: {
                 Calendar,
@@ -349,42 +351,151 @@ export default {
                 }
             }
 
+            
+
             let incident_url = "http://localhost:8000/incidents";
+
+
 
             console.log("filtered codes are " + filtered_codes);
             console.log("max is " + this.max);
             //if there is a code filter
             if (filtered_codes.length > 0 ) {
                 incident_url = incident_url + "?code=" + filtered_codes;
-                //if there is a code filter and a limit filter
+                //if there is a code filter and a limit filter, check for dates
                 if (this.max.length>0) {
                     incident_url = incident_url + "&limit=" + this.max;
-                    //if there is a code, limit, and neighborhood filter
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                    //if there is a code, limit, and neighborhood filter, check for dates
                     if (filtered_neighborhoods.length > 0) {
                         incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
                     }
-                //if there is a code filter and a neighborhood filter, but no limit
+                //if there is a code filter and a neighborhood filter and dates, but no limit
                 } else if (filtered_neighborhoods.length >0) {
                     incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
                 }
-                //if there is no limit or neighborhood filter, just codes filter
+                //if there is no limit or neighborhood filter, just codes filter and dates
+                if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                else if (this.endDate.length > 0) {
+                    incident_url = incident_url + "&start_date=" + "2014-08-14";
+                    incident_url = incident_url + "&end_date=" + this.endDate;
+                }
                 incidentPromise = this.getJSON(incident_url);
             }
 
             //if there are no codes filters
             else if (filtered_codes.length<=0 ) {
-                //no codes, just limit
+                //no codes, just limit, check for dates
                 if (this.max.length>0) {
                         incident_url = incident_url + "?limit=" + this.max;
-                        
-                    //if there are limit and neighborhoods filters
+                        if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                    //if there are limit and neighborhoods filters, check for dates
                     if (filtered_neighborhoods.length > 0) {
                         incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
+                        if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
                     }
 
-                //if there are no codes or limit filters, just neighborhoods
+                //if there are no codes or limit filters, just neighborhoods, check for dates
                 } else if (filtered_neighborhoods.length > 0) {
                     incident_url = incident_url + "?neighborhood=" + filtered_neighborhoods;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+
+                //if there are no codes, limits, neighborhoods filters, just dates
+                } else if(this.startDate.length > 0){
+                    incident_url = incident_url + "?start_date=" + this.startDate;
+                    //has startDate and end Date
+                    if (this.endDate.length > 0) {
+                        incident_url = incident_url + "&end_date=" + this.endDate;
+                        //has start date but no end date input
+                    } else {
+                        incident_url = incident_url + "&end_date=" + "2022-05-31";
+                    }
+                }
+                //has an endDate but no startDate, no does, limits, neighborhoods
+                else if (this.endDate.length > 0) {
+                    incident_url = incident_url + "?start_date=" + "2014-08-14";
+                    incident_url = incident_url + "&end_date=" + this.endDate;
                 }
                 incidentPromise=this.getJSON(incident_url);
             }
@@ -640,7 +751,12 @@ export default {
                     <br>
 
                     <span><u>Date</u>:</span>
+                    <p>Please enter date in "YYYY-MM-DD" form</p>
                     <br>
+                        <p>Start Date</p>
+                        <input type="text" id="start_date" v-model="startDate"><br>
+                        <p>End Date</p>
+                        <input type="text" id="end_date" v-model="endDate"><br>
                         <!--<v-date-picker v-model="range" is-range />-->
                     <br>
 
