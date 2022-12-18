@@ -651,8 +651,6 @@ export default {
             this.codes = results[0];
             this.neighborhoods = results[1];
             this.incidents = results[2];
-            /*console.log('codes are ' + JSON.stringify(this.codes));*/
-            /*.split(":")[1].split(",")[0]);*/
             $(results[3].features).each((key, value) => {
                 district_boundary.addData(value);
             });
