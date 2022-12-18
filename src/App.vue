@@ -644,12 +644,15 @@ export default {
                         </thead>
                         <tbody>
                             <tr v-for="item in incidents">
-                                <td style="{backgroundColor: red}">{{ item.case_number }}</td>
+                                <td>{{ item.case_number }}</td>
                                 <td>{{ item.incident }}</td>
                                 <td>{{ item.date }}</td>
                                 <td>{{ item.time }}</td>
                                 <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
                                 <td>{{ item.block }}</td>
+
+                                <!--<li v-for="(item, index) in result_array" :class="(index % 2 === 0) ? 'even' : 'odd'">{{ item.name }}</li>-->
+
                                 <td><button type="button" id="delete_button" onclick="remove()">Delete</button></td>
                             </tr>
                         </tbody>
@@ -739,6 +742,12 @@ export default {
 }
 .violent {
     background-color:red;
+}
+.property {
+    background-color: blue;
+}
+.other {
+    background-color: green;
 }
 
 
