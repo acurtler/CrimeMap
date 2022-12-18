@@ -1,13 +1,6 @@
 <script>
 import $ from 'jquery'
 
-/*import Calendar from 'v-calendar/lib/components/calendar.umd'
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
-
-// Register components in your 'main.js'
-Vue.component('calendar', Calendar)
-Vue.component('date-picker', DatePicker)*/
-
 export default {
     data() {
         return {
@@ -15,6 +8,7 @@ export default {
             limit: 1000,
             codes: [],
             neighborhoods: [],
+            place_holder: 'Enter Location',
             incidents: [],
             new_incident: {
                 case_number: "",
@@ -26,18 +20,33 @@ export default {
                 neighborhood_number: "",
                 block: ""
             },
+            delete_incident: {
+                case_number: ""
+            },
             checkedNeighborhoods: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
             checkedIncidents: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            /*checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
-            /*checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
+            homicide: [100, 110, 120],
+            rape: [210, 220],
+            robbery: [300, 311, 312, 313, 314, 321, 322, 323, 324, 331, 333, 334, 341, 342, 343, 344, 351, 352, 353, 354, 361, 363, 364, 371, 372, 373, 374],
+            assault: [400, 411, 412, 420, 421, 422, 430, 431, 432, 440, 441, 442, 450, 451, 452, 453, 810, 861, 862, 863],
+            burglary: [500, 510, 511, 513, 515, 516, 520, 521, 523, 525, 526, 530, 531, 533, 535, 536, 540, 541, 543, 545, 546, 550, 551, 553, 555, 556, 560, 561, 563, 565, 566],
+            theft: [600, 603, 611, 612, 613, 621, 622, 623, 630, 631, 632, 633, 640, 641, 642, 643, 651, 652, 653, 661, 662, 663, 671, 672, 673, 681, 682, 683, 691, 692, 693, 700, 710, 711, 712, 720, 721, 722, 730, 731, 732],
+            arson: [900, 901, 903, 905, 911, 913, 915, 921, 922, 923, 925, 931, 933, 941, 942, 951, 961, 971, 972, 975, 981, 982],
+            damage: [1400, 1401, 1410, 1415, 1416, 1420, 1425, 1426, 1430, 1435, 1436],
+            narcotics: [1800, 1810, 1811, 1812, 1813, 1814, 1815, 1820, 1822, 1823, 1824, 1825, 1830, 1835, 1840, 1841, 1842, 1843, 1844, 1845, 1850, 1855, 1860, 1865, 1870, 1880, 1885],
+            weapon: [2619],
+            death: [3100],
+            police: [9954],
+            engagement: [9959],
+            patrol: [9986],
+            other: [614],
+            isViolent: true,
+            isProperty: false,
+            isOther: false,
             max: [],
+            startDate: "",
+            endDate: "",
             el: '...',
-            /*components: {
-                Calendar,
-                DatePicker,
-                date: new Date(),
-            },*/
-
             leaflet: {
                 map: null,
                 center: {
@@ -84,47 +93,415 @@ export default {
         viewAbout(event) {
             this.view = 'about';
         },
+
         
         setFilter(event) {
             let codePromise = this.getJSON('http://localhost:8000/codes');
             let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
             let incidentPromise = this.getJSON('http://localhost:8000/incidents');
 
-            if (this.max.length>0) {
-                for (let i=0; i<this.max.length; i++) {
-                    let incidentPromise = this.getJSON('http://localhost:8000/incidents?limit=' + this.max[i]);
-                }
-            }
-
+            console.log('checked neighborhoods: ' + this.checkedNeighborhoods);
+            let filtered_neighborhoods = "";
+            let n_count = 0;
             for (let i=0; i<this.checkedNeighborhoods.length; i++) {
-                if (this.checkedNeighborhoods[i] == 'true') {
-                    let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods?name='+this.checkedNeighborhoods[i]);
+                if (this.checkedNeighborhoods[i] == true) {
+                    if (i==0) {
+                        filtered_neighborhoods = filtered_neighborhoods + "1";
+                        n_count++;
+                    }
+                    else if (i==1) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "2";
+                        n_count++;
+                    }
+                    else if (i==2) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "3";
+                        n_count++;
+                    }
+                    else if (i==3) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "4";
+                        n_count++;
+                    }
+                    else if (i==4) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "5";
+                        n_count++;
+                    }
+                    else if (i==5) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "6";
+                        n_count++;
+                    }
+                    else if (i==6) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "7";
+                        n_count++;
+                    }
+                    else if (i==7) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "8";
+                        n_count++;
+                    }
+                    else if (i==8) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "9";
+                        n_count++;
+                    }
+                    else if (i==9) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "10";
+                        n_count++;
+                    }
+                    else if (i==10) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "11";
+                        n_count++;
+                    }
+                    else if (i==11) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "12";
+                        n_count++;
+                    }
+                    else if (i==12) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "13";
+                        n_count++;
+                    }
+                    else if (i==13) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "14";
+                        n_count++;
+                    }
+                    else if (i==14) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "15";
+                        n_count++;
+                    }
+                    else if (i==15) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "16";
+                        n_count++;
+                    }
+                    else if (i==16) {
+                        if (n_count>0) {
+                            filtered_neighborhoods = filtered_neighborhoods + ',';
+                        }
+                        filtered_neighborhoods = filtered_neighborhoods + "17";
+                        n_count++;
+                    }
+                
+                    /*let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods?name='+this.neighborhoods[i]);*/
                 }
             }
 
+            console.log("neighborhood numbers: " + filtered_neighborhoods);
+
+            console.log("homicide: " + this.murder);
+            let filtered_codes = "";
+
+            console.log('value is ' + this.checkedIncidents);
+            let count = 0;
             for (let i=0; i<this.checkedIncidents.length; i++) {
-                if (this.checkedIncidents[i] == 'true') {
-                    let codePromise = this.getJSON('http://localhost:8000/codes');
+                if (this.checkedIncidents[i] == true) {
+                    if (i==0) {
+                        filtered_codes = filtered_codes + this.homicide;
+                        count++;
+                    }
+                    else if (i==1) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.rape;
+                        count++;
+                    }
+                    else if (i==2) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.robbery;
+                        count++;
+                    }
+                    else if (i==3) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.assault;
+                        count++;
+                    }
+                    else if (i==4) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.burglary;
+                        count++;
+                    }
+                    else if (i==5) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.theft;
+                        count++;
+                    }
+                    else if (i==6) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.arson;
+                        count++;
+                    }
+                    else if (i==7) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.damage;
+                        count++;
+                    }
+                    else if (i==8) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.narcotics;
+                        count++;
+                    }
+                    else if (i==9) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.weapon;
+                        count++;
+                    }
+                    else if (i==10) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.death;
+                        count++;
+                    }
+                    else if (i==11) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.police;
+                        count++;
+                    }
+                    else if (i==12) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.engagement;
+                        count++;
+                    }
+                    else if (i==13) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.patrol;
+                        count++;
+                    }
+                    else if (i==14) {
+                        if (count>0) {
+                            filtered_codes = filtered_codes + ',';
+                        }
+                        filtered_codes = filtered_codes + this.other;
+                        count++;
+                    }
                 }
             }
 
-            Promise.all([codePromise, neighborhoodPromise, incidentPromise, geoPromise]).then((results) => {
+            
+
+            let incident_url = "http://localhost:8000/incidents";
+
+
+
+            console.log("filtered codes are " + filtered_codes);
+            console.log("max is " + this.max);
+            //if there is a code filter
+            if (filtered_codes.length > 0 ) {
+                incident_url = incident_url + "?code=" + filtered_codes;
+                //if there is a code filter and a limit filter, check for dates
+                if (this.max.length>0) {
+                    incident_url = incident_url + "&limit=" + this.max;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                    //if there is a code, limit, and neighborhood filter, check for dates
+                    if (filtered_neighborhoods.length > 0) {
+                        incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
+                    }
+                //if there is a code filter and a neighborhood filter and dates, but no limit
+                } else if (filtered_neighborhoods.length >0) {
+                    incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                }
+                //if there is no limit or neighborhood filter, just codes filter and dates
+                if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                else if (this.endDate.length > 0) {
+                    incident_url = incident_url + "&start_date=" + "2014-08-14";
+                    incident_url = incident_url + "&end_date=" + this.endDate;
+                }
+                incidentPromise = this.getJSON(incident_url);
+            }
+
+            //if there are no codes filters
+            else if (filtered_codes.length<=0 ) {
+                //no codes, just limit, check for dates
+                if (this.max.length>0) {
+                        incident_url = incident_url + "?limit=" + this.max;
+                        if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                    //if there are limit and neighborhoods filters, check for dates
+                    if (filtered_neighborhoods.length > 0) {
+                        incident_url = incident_url + "&neighborhood=" + filtered_neighborhoods;
+                        if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+                    }
+
+                //if there are no codes or limit filters, just neighborhoods, check for dates
+                } else if (filtered_neighborhoods.length > 0) {
+                    incident_url = incident_url + "?neighborhood=" + filtered_neighborhoods;
+                    if(this.startDate.length > 0){
+                            incident_url = incident_url + "&start_date=" + this.startDate;
+                            //has startDate and end Date
+                            if (this.endDate.length > 0) {
+                                incident_url = incident_url + "&end_date=" + this.endDate;
+                                //has start date but no end date input
+                            } else {
+                                incident_url = incident_url + "&end_date=" + "2022-05-31";
+                            }
+                        }
+                        //has an endDate but no startDate
+                        else if (this.endDate.length > 0) {
+                            incident_url = incident_url + "&start_date=" + "2014-08-14";
+                            incident_url = incident_url + "&end_date=" + this.endDate;
+                        }
+
+                //if there are no codes, limits, neighborhoods filters, just dates
+                } else if(this.startDate.length > 0){
+                    incident_url = incident_url + "?start_date=" + this.startDate;
+                    //has startDate and end Date
+                    if (this.endDate.length > 0) {
+                        incident_url = incident_url + "&end_date=" + this.endDate;
+                        //has start date but no end date input
+                    } else {
+                        incident_url = incident_url + "&end_date=" + "2022-05-31";
+                    }
+                }
+                //has an endDate but no startDate, no does, limits, neighborhoods
+                else if (this.endDate.length > 0) {
+                    incident_url = incident_url + "?start_date=" + "2014-08-14";
+                    incident_url = incident_url + "&end_date=" + this.endDate;
+                }
+                incidentPromise=this.getJSON(incident_url);
+            }
+
+
+            Promise.all([codePromise, neighborhoodPromise, incidentPromise]).then((results) => {
                 this.codes = results[0];
                 this.neighborhoods = results[1];
                 this.incidents = results[2];
-                $(results[3].features).each((key, value) => {
-                    district_boundary.addData(value);
-                });
             }).catch((error) => {
                 console.log('Error:', error);
             });
         },
 
         geoLocate(event) {
-            console.log(event);
-            console.log(this.checkedIncidents);
             let location = document.getElementById('location');
-            let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value +
+            let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value + ',St.Paul,MN' +
               '&format=json&limit=1&accept-language=en';
               this.getJSON(url).then( (data) => {
                     console.log('longitude is '+ data[0].lon);
@@ -132,12 +509,50 @@ export default {
                     let lat = data[0].lat;
                     let lon = data[0].lon;
                     // use data and this.leaflet.map
-                    var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);
-                    this.leaflet.map.flyTo([data[0].lat, data[0].lon], 1);
+                    /*var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);*/
+                    /*this.leaflet.center([data[0].lat, data[0].lon], 1);*/
+                    this.leaflet.map = this.leaflet.map.setView([data[0].lat, data[0].lon], 15);
+                    var marker = L.marker([lat, lon],{}).addTo(this.leaflet.map);
+                    /*this.leaflet.map.flyTo([lat, lon], zoom);*/
+                    /*move(event) {
+                        document.getElementById("lookup").placeholder = "Enter Location";
+
+                    }*/
+                    this.leaflet.map('moveend', move);
                     /*this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);*/
               }).catch((error) => {
                     console.log(error);
               });
+        },
+
+        markIncident(event) {
+            let event_split = event.block.split(' ');
+            let address_number = event_split[0];
+            let individual_number = address_number.split('');
+            let number = "";
+            let street = "";
+            for (let i=0; i<individual_number.length; i++) {
+                if (individual_number[i].toString() == 'X') {
+                    individual_number[i] = '0';
+                }
+                number = number + individual_number[i];
+            }
+            for (let i=1; i<event_split.length; i++) {
+                street = street + event_split[i] + ' ';
+            }
+            let full_street = number + ' ' + street;
+            let final_street = full_street.toLocaleLowerCase();
+            console.log(final_street);
+
+            let url = 'https://nominatim.openstreetmap.org/search?q=' + final_street + ',St.Paul,MN' +
+              '&format=json&limit=10&accept-language=en';
+            this.getJSON(url).then( (data) => {
+                console.log(data);
+                var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);
+                /*addPopups(data[0].lat, data[0].lon, event.date, event.time, event.incident);*/
+            }).catch((error) => {
+                    console.log(error);
+            });
         },
 
         newIncident(event) {
@@ -145,8 +560,33 @@ export default {
             let url = "http://localhost:8000/new-incident";
             this.uploadJSON('PUT', url, this.new_incident).then( (data) => {
                 console.log(data);
+                alert('Thanks for your submission.');
             }).catch((error) => {
                 console.log(error);
+            });
+        },
+
+        remove(event, index) {
+            let delete_url = "http://localhost:8000/remove-incident";
+            this.delete_incident.case_number = event;
+            console.log('event is ' + this.delete_incident.case_number);
+            /*element.addEventListener("click", remove_incident);*/
+            this.uploadJSON('DELETE', delete_url, this.delete_incident).then( (data) => {
+                console.log(data);
+                this.incidents.splice(index, 1);
+            }).catch((error) => {
+                console.log(error);
+            });
+
+            let codePromise = this.getJSON('http://localhost:8000/codes');
+            let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
+            let incidentPromise = this.getJSON('http://localhost:8000/incidents');
+            Promise.all([codePromise, neighborhoodPromise, incidentPromise]).then((results) => {
+                this.codes = results[0];
+                this.neighborhoods = results[1];
+                this.incidents = results[2];
+            }).catch((error) => {
+                console.log('Error:', error);
             });
         },
 
@@ -263,35 +703,55 @@ export default {
             </div>
 
             <div class="grid-x grid-padding-x">
-                <input id="location" class = "cell small-9" type="text" placeholder="enter location"/> 
+                <input id="location" class = "cell small-9" type="text"/> 
                 <button id="lookup" class="cell small-3 button" type="button" @click="geoLocate">Look Up</button>
             </div>
 
             <div class="grid-x grid-padding-x">
                 <div id="filters" class="cell small-3">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>Crime Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td :style="{background:'#d94f45'}"></td>
+                                <td>Violent</td>
+                            </tr>
+                            <tr>
+                                <td :style="{background:'#90c5de'}"></td>
+                                <td>Property</td>
+                            </tr>
+                            <tr>
+                                <td :style="{background:'#f5eeb5'}"></td>
+                                <td>Other</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <span><b>Search by Filter:</b></span>
                     <br>
                     <br>
 
                     <span><u>Incident Type</u>:</span>
                     <br>
-                        <input type="checkbox" id="homicide" value="Homicide" v-model="checkedIncidents[0]"><label for="homicide">Homicide</label><br>
-                        <input type="checkbox" id="murder" value="Murder" v-model="checkedIncidents[1]"><label for="murder">Murder</label><br>
-                        <input type="checkbox" id="rape" value="Rape" v-model="checkedIncidents[2]"><label for="rape">Rape</label><br>
-                        <input type="checkbox" id="robbery" value="Robbery" v-model="checkedIncidents[3]"><label for="robbery">Robbery</label><br>
-                        <input type="checkbox" id="aggravated assault" value="Aggravated Assault" v-model="checkedIncidents[4]"><label for="aggravated assault">Aggravated Assault</label><br>
-                        <input type="checkbox" id="burglary" value="Burglary" v-model="checkedIncidents[5]"><label for="">Burglary</label><br>
-                        <input type="checkbox" id="att. burglary" value="Att. Burglary" v-model="checkedIncidents[6]"><label for="att. burglary">Attempted Burglary</label><br>
-                        <input type="checkbox" id="theft" value="Theft" v-model="checkedIncidents[7]"><label for="theft">Theft</label><br>
-                        <input type="checkbox" id="arson" value="Arson" v-model="checkedIncidents[8]"><label for="arson">Arson</label><br>
-                        <input type="checkbox" id="damage" value="Damage" v-model="checkedIncidents[9]"><label for="damage">Damage to Property</label><br>
-                        <input type="checkbox" id="narcotics" value="Narcotics" v-model="checkedIncidents[10]"><label for="narcotics">Narcotics</label><br>
-                        <input type="checkbox" id="weapon" value="Weapon" v-model="checkedIncidents[11]"><label for="weapon">Weapon</label><br>
-                        <input type="checkbox" id="death_investigation" value="Death Investigation" v-model="checkedIncidents[12]"><label for="death_investigation">Death Investigation</label><br>
-                        <input type="checkbox" id="police_visit" value="Police Visit" v-model="checkedIncidents[13]"><label for="police_visit">Police Visit</label><br>
-                        <input type="checkbox" id="event" value="Engagement Event" v-model="checkedIncidents[14]"><label for="event">Community Engagement Event</label><br>
-                        <input type="checkbox" id="foot_patrol" value="Foot Patrol" v-model="checkedIncidents[15]"><label for="foot_patrol">Proactive Foot Patrol</label><br>
-                        <input type="checkbox" id="other" value="Other" v-model="checkedIncidents[16]"><label for="other">Other</label><br>
+                        <input type="checkbox" id="violent" value="Homicide" v-model="checkedIncidents[0]"><label for="homicide">Homicide</label><br>
+                        <input type="checkbox" id="violent" value="Rape" v-model="checkedIncidents[1]"><label for="rape">Rape</label><br>
+                        <input type="checkbox" id="robbery" value="Robbery" v-model="checkedIncidents[2]"><label for="robbery">Robbery</label><br>
+                        <input type="checkbox" id="violent" value="Aggravated Assault" v-model="checkedIncidents[3]"><label for="aggravated assault">Assault</label><br>
+                        <input type="checkbox" id="burglary" value="Burglary" v-model="checkedIncidents[4]"><label for="">Burglary</label><br>
+                        <input type="checkbox" id="theft" value="Theft" v-model="checkedIncidents[5]"><label for="theft">Theft</label><br>
+                        <input type="checkbox" id="arson" value="Arson" v-model="checkedIncidents[6]"><label for="arson">Arson</label><br>
+                        <input type="checkbox" id="damage" value="Damage" v-model="checkedIncidents[7]"><label for="damage">Damage to Property</label><br>
+                        <input type="checkbox" id="narcotics" value="Narcotics" v-model="checkedIncidents[8]"><label for="narcotics">Narcotics</label><br>
+                        <input type="checkbox" id="weapon" value="Weapon" v-model="checkedIncidents[9]"><label for="weapon">Weapon</label><br>
+                        <input type="checkbox" id="death_investigation" value="Death Investigation" v-model="checkedIncidents[10]"><label for="death_investigation">Death Investigation</label><br>
+                        <input type="checkbox" id="police_visit" value="Police Visit" v-model="checkedIncidents[11]"><label for="police_visit">Police Visit</label><br>
+                        <input type="checkbox" id="event" value="Engagement Event" v-model="checkedIncidents[12]"><label for="event">Community Engagement Event</label><br>
+                        <input type="checkbox" id="foot_patrol" value="Foot Patrol" v-model="checkedIncidents[13]"><label for="foot_patrol">Proactive Foot Patrol</label><br>
+                        <input type="checkbox" id="other" value="Other" v-model="checkedIncidents[14]"><label for="other">Other</label><br>
                     <br>
                     
                     <span><u>Neighborhoods</u>:</span>
@@ -316,17 +776,20 @@ export default {
                     <br>
 
                     <span><u>Date</u>:</span>
+                    <p>Please enter date in "YYYY-MM-DD" form</p>
                     <br>
+                        <p>Start Date</p>
+                        <input type="text" placeholder="Example: 2014-08-14" id="start_date" v-model="startDate"><br>
+                        <p>End Date</p>
+                        <input type="text" placeholder="Example: 2022-05-31" id="end_date" v-model="endDate"><br>
                         <!--<v-date-picker v-model="range" is-range />-->
-                    <br>
-
 
                     <span><u>Max Incidents</u>:</span>
                     <br>
-                        <input type="radio" id="10" value="limit_10" v-model="max"><label for="10">10</label>
-                        <input type="radio" id="50" value="limit_50" v-model="max"><label for="50">50</label>
-                        <input type="radio" id="100" value="limit_100" v-model="max"><label for="100">100</label>
-                        <input type="radio" id="500" value="limit_500" v-model="max"><label for="500">500</label>
+                        <input type="radio" id="10" value="10" v-model="max"><label for="10">10</label><br>
+                        <input type="radio" id="50" value="50" v-model="max"><label for="50">50</label><br>
+                        <input type="radio" id="100" value="100" v-model="max"><label for="100">100</label><br>
+                        <input type="radio" id="500" value="500" v-model="max"><label for="500">500</label>
 
                     <button id="lookup" class="cell small-3 button" type="button" @click="setFilter">Apply Filters</button>
 
@@ -334,24 +797,28 @@ export default {
                 <div id="data" class="cell small-9">
                     <table>
                         <thead>
-                            <tr>
+                            <tr class="table">
                                 <th>Case Number</th>
                                 <th>Incident Type</th>
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>Neighborhood Name</th>
                                 <th>Block</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in incidents">
-                                <td>{{ item.case_number }}</td>
-                                <td>{{ item.incident }}</td>
-                                <td>{{ item.date_time.split('T')[0] }}</td>
-                                <td>{{ item.date_time.split('T')[1] }}</td>
-                                <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
-                                <td>{{ item.block }}</td>
-                            </tr>
+                            <template v-for="(item, index) in incidents" :item="item">
+                                <tr class="table" :style="{ background: item.code >=100 && item.code <=220 || item.code >= 400 && item.code <= 453 || item.code >= 810 && item.code <= 863 ? '#d94f45' : item.code >= 300 && item.code <= 374 || item.code >= 500 && item.code <= 566 || item.code >= 600 && item.code <= 732 || item.code >= 900 && item.code <= 982 || item.code >= 1400 && item.code <= 1436 ? '#90c5de' : '#f5eeb5'}">
+                                    <td class="table">{{ item.case_number }}</td>
+                                    <td class="table">{{ item.incident }}</td>
+                                    <td class="table">{{ item.date }}</td>
+                                    <td class="table">{{ item.time }}</td>
+                                    <td class="table">{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
+                                    <td class="table"><button type="button" v-on:click="markIncident(item)">{{ item.block }}</button></td>
+                                    <td class="delete"><button type="button" id="delete_button" v-on:click="remove(item.case_number, index)">Delete</button></td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
@@ -437,7 +904,20 @@ export default {
 .neighborhoods {
     border: 2rem;
 }
-
-
+.table {
+    border-style: solid;
+    border-color: black;
+}
+.delete {
+    background-color: #f0eceb;
+    cursor: pointer;
+    border-style: solid;
+    border-color: black;
+}
+.block {
+    border-style: solid;
+    border-color: black;
+    cursor: pointer;
+}
 
 </style>
