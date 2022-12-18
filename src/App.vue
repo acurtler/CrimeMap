@@ -787,17 +787,16 @@ export default {
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="item in incidents"><tr :style="{ background: item.code >=100 && item.code <=220 || item.code >= 400 && item.code <= 453 || item.code >= 810 && item.code <= 863 ? '#d94f45' : item.code >= 300 && item.code <= 374 || item.code >= 500 && item.code <= 566 || item.code >= 600 && item.code <= 732 || item.code >= 900 && item.code <= 982 || item.code >= 1400 && item.code <= 1436 ? '#90c5de' : '#f5eeb5'}">
-                                <td>{{ item.case_number }}</td>
-                                <td>{{ item.incident }}</td>
-                                <td>{{ item.date }}</td>
-                                <td>{{ item.time }}</td>
-                                <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
-                                <td>{{ item.block }}</td>
-
-                                <!--<li v-for="(item, index) in result_array" :class="(index % 2 === 0) ? 'even' : 'odd'">{{ item.name }}</li>-->
-
-                                <td><button type="button" id="delete_button" onclick="remove()">Delete</button></td>
+                            <template v-for="item in incidents">
+                                <tr :style="{ background: item.code >=100 && item.code <=220 || item.code >= 400 && item.code <= 453 || item.code >= 810 && item.code <= 863 ? '#d94f45' : item.code >= 300 && item.code <= 374 || item.code >= 500 && item.code <= 566 || item.code >= 600 && item.code <= 732 || item.code >= 900 && item.code <= 982 || item.code >= 1400 && item.code <= 1436 ? '#90c5de' : '#f5eeb5'}">
+                                    <td>{{ item.case_number }}</td>
+                                    <td>{{ item.incident }}</td>
+                                    <td>{{ item.date }}</td>
+                                    <td>{{ item.time }}</td>
+                                    <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
+                                    <td>{{ item.block }}</td>
+                                    <td><button type="button" id="delete_button" onclick="remove()">Delete</button></td>
+                                </tr>
                             </template>
                         </tbody>
                     </table>
