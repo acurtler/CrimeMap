@@ -105,6 +105,7 @@ export default {
         viewAbout(event) {
             this.view = 'about';
         },
+
         
         setFilter(event) {
             let codePromise = this.getJSON('http://localhost:8000/codes');
@@ -547,6 +548,7 @@ export default {
             }).catch((error) => {
                 console.log(error);
             });
+            alert('Thanks for your submission.');
         },
 
         remove: function() {
@@ -754,9 +756,9 @@ export default {
                     <p>Please enter date in "YYYY-MM-DD" form</p>
                     <br>
                         <p>Start Date</p>
-                        <input type="text" id="start_date" v-model="startDate"><br>
+                        <input type="text" placeholder="Example: 2014-08-14" id="start_date" v-model="startDate"><br>
                         <p>End Date</p>
-                        <input type="text" id="end_date" v-model="endDate"><br>
+                        <input type="text" placeholder="Example: 2022-05-31" id="end_date" v-model="endDate"><br>
                         <!--<v-date-picker v-model="range" is-range />-->
                     <br>
 
