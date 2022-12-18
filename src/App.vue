@@ -44,6 +44,9 @@ export default {
             engagement: [9959],
             patrol: [9986],
             other: [614],
+            isViolent: true,
+            isProperty: false,
+            isOther: false,
             /*checkedNeighborhoods: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             /*checkedIncidents: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],*/
             max: [],
@@ -570,16 +573,38 @@ export default {
 
             <div class="grid-x grid-padding-x">
                 <div id="filters" class="cell small-3">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>Crime Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td :style="{background:'#d94f45'}"></td>
+                                <td>Violent</td>
+                            </tr>
+                            <tr>
+                                <td :style="{background:'#90c5de'}"></td>
+                                <td>Property</td>
+                            </tr>
+                            <tr>
+                                <td :style="{background:'#f5eeb5'}"></td>
+                                <td>Other</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <span><b>Search by Filter:</b></span>
                     <br>
                     <br>
 
                     <span><u>Incident Type</u>:</span>
                     <br>
-                        <input type="checkbox" id="homicide" value="Homicide" v-model="checkedIncidents[0]"><label for="homicide">Homicide</label><br>
-                        <input type="checkbox" id="rape" value="Rape" v-model="checkedIncidents[1]"><label for="rape">Rape</label><br>
+                        <input type="checkbox" id="violent" value="Homicide" v-model="checkedIncidents[0]"><label for="homicide">Homicide</label><br>
+                        <input type="checkbox" id="violent" value="Rape" v-model="checkedIncidents[1]"><label for="rape">Rape</label><br>
                         <input type="checkbox" id="robbery" value="Robbery" v-model="checkedIncidents[2]"><label for="robbery">Robbery</label><br>
-                        <input type="checkbox" id="aggravated assault" value="Aggravated Assault" v-model="checkedIncidents[3]"><label for="aggravated assault">Assault</label><br>
+                        <input type="checkbox" id="violent" value="Aggravated Assault" v-model="checkedIncidents[3]"><label for="aggravated assault">Assault</label><br>
                         <input type="checkbox" id="burglary" value="Burglary" v-model="checkedIncidents[4]"><label for="">Burglary</label><br>
                         <input type="checkbox" id="theft" value="Theft" v-model="checkedIncidents[5]"><label for="theft">Theft</label><br>
                         <input type="checkbox" id="arson" value="Arson" v-model="checkedIncidents[6]"><label for="arson">Arson</label><br>
@@ -644,8 +669,8 @@ export default {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in incidents">
-                                <td style="{backgroundColor: red}">{{ item.case_number }}</td>
+                            <template v-for="item in incidents"><tr :style="{ background: item.code >=100 && item.code <=220 || item.code >= 400 && item.code <= 453 || item.code >= 810 && item.code <= 863 ? '#d94f45' : item.code >= 300 && item.code <= 374 || item.code >= 500 && item.code <= 566 || item.code >= 600 && item.code <= 732 || item.code >= 900 && item.code <= 982 || item.code >= 1400 && item.code <= 1436 ? '#90c5de' : '#f5eeb5'}">
+                                <td>{{ item.case_number }}</td>
                                 <td>{{ item.incident }}</td>
                                 <td>{{ item.date }}</td>
                                 <td>{{ item.time }}</td>
@@ -653,6 +678,7 @@ export default {
                                 <td>{{ item.block }}</td>
                                 <td><button type="button" id="delete_button" onclick="remove()">Delete</button></td>
                             </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
