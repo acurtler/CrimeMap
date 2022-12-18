@@ -27,6 +27,9 @@ export default {
                 neighborhood_number: "",
                 block: ""
             },
+            delete_incident: {
+                case_number: ""
+            },
             checkedNeighborhoods: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
             checkedIncidents: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
             homicide: [100, 110, 120],
@@ -506,9 +509,6 @@ export default {
                 this.codes = results[0];
                 this.neighborhoods = results[1];
                 this.incidents = results[2];
-                /*$(results[3].features).each((key, value) => {
-                    district_boundary.addData(value);
-                });*/
             }).catch((error) => {
                 console.log('Error:', error);
             });
@@ -545,24 +545,34 @@ export default {
             let url = "http://localhost:8000/new-incident";
             this.uploadJSON('PUT', url, this.new_incident).then( (data) => {
                 console.log(data);
+                alert('Thanks for your submission.');
             }).catch((error) => {
                 console.log(error);
             });
-            alert('Thanks for your submission.');
         },
 
-        remove: function() {
+        remove(event, index) {
             let delete_url = "http://localhost:8000/remove-incident";
-
-            element.addEventListener("click", remove_incident);
-
-            function remove_incident() {
-                this.uploadJSON('DELETE', delete_url).then( (data) => {
+            this.delete_incident.case_number = event;
+            console.log('event is ' + this.delete_incident.case_number);
+            /*element.addEventListener("click", remove_incident);*/
+            this.uploadJSON('DELETE', delete_url, this.delete_incident).then( (data) => {
                 console.log(data);
-                }).catch((error) => {
-                    console.log(error);
-                });
-                }
+                this.incidents.splice(index, 1);
+            }).catch((error) => {
+                console.log(error);
+            });
+
+            let codePromise = this.getJSON('http://localhost:8000/codes');
+            let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
+            let incidentPromise = this.getJSON('http://localhost:8000/incidents');
+            Promise.all([codePromise, neighborhoodPromise, incidentPromise]).then((results) => {
+                this.codes = results[0];
+                this.neighborhoods = results[1];
+                this.incidents = results[2];
+            }).catch((error) => {
+                console.log('Error:', error);
+            });
         },
 
         getJSON(url) {
@@ -760,14 +770,12 @@ export default {
                         <p>End Date</p>
                         <input type="text" placeholder="Example: 2022-05-31" id="end_date" v-model="endDate"><br>
                         <!--<v-date-picker v-model="range" is-range />-->
-                    <br>
-
 
                     <span><u>Max Incidents</u>:</span>
                     <br>
-                        <input type="radio" id="10" value="10" v-model="max"><label for="10">10</label>
-                        <input type="radio" id="50" value="50" v-model="max"><label for="50">50</label>
-                        <input type="radio" id="100" value="100" v-model="max"><label for="100">100</label>
+                        <input type="radio" id="10" value="10" v-model="max"><label for="10">10</label><br>
+                        <input type="radio" id="50" value="50" v-model="max"><label for="50">50</label><br>
+                        <input type="radio" id="100" value="100" v-model="max"><label for="100">100</label><br>
                         <input type="radio" id="500" value="500" v-model="max"><label for="500">500</label>
 
                     <button id="lookup" class="cell small-3 button" type="button" @click="setFilter">Apply Filters</button>
@@ -776,7 +784,7 @@ export default {
                 <div id="data" class="cell small-9">
                     <table>
                         <thead>
-                            <tr>
+                            <tr class="table">
                                 <th>Case Number</th>
                                 <th>Incident Type</th>
                                 <th>Date</th>
@@ -787,15 +795,15 @@ export default {
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="item in incidents">
-                                <tr :style="{ background: item.code >=100 && item.code <=220 || item.code >= 400 && item.code <= 453 || item.code >= 810 && item.code <= 863 ? '#d94f45' : item.code >= 300 && item.code <= 374 || item.code >= 500 && item.code <= 566 || item.code >= 600 && item.code <= 732 || item.code >= 900 && item.code <= 982 || item.code >= 1400 && item.code <= 1436 ? '#90c5de' : '#f5eeb5'}">
-                                    <td>{{ item.case_number }}</td>
-                                    <td>{{ item.incident }}</td>
-                                    <td>{{ item.date }}</td>
-                                    <td>{{ item.time }}</td>
-                                    <td>{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
-                                    <td>{{ item.block }}</td>
-                                    <td><button type="button" id="delete_button" onclick="remove()">Delete</button></td>
+                            <template v-for="(item, index) in incidents" :item="item">
+                                <tr class="table" :style="{ background: item.code >=100 && item.code <=220 || item.code >= 400 && item.code <= 453 || item.code >= 810 && item.code <= 863 ? '#d94f45' : item.code >= 300 && item.code <= 374 || item.code >= 500 && item.code <= 566 || item.code >= 600 && item.code <= 732 || item.code >= 900 && item.code <= 982 || item.code >= 1400 && item.code <= 1436 ? '#90c5de' : '#f5eeb5'}">
+                                    <td class="table">{{ item.case_number }}</td>
+                                    <td class="table">{{ item.incident }}</td>
+                                    <td class="table">{{ item.date }}</td>
+                                    <td class="table">{{ item.time }}</td>
+                                    <td class="table">{{ neighborhoods[item.neighborhood_number - 1].name }}</td>
+                                    <td class="table">{{ item.block }}</td>
+                                    <td class="delete"><button type="button" id="delete_button" v-on:click="remove(item.case_number, index)">Delete</button></td>
                                 </tr>
                             </template>
                         </tbody>
@@ -883,15 +891,15 @@ export default {
 .neighborhoods {
     border: 2rem;
 }
-.violent {
-    background-color:red;
+.table {
+    border-style: solid;
+    border-color: black;
 }
-.property {
-    background-color: blue;
+.delete {
+    background-color: #f0eceb;
+    cursor: pointer;
+    border-style: solid;
+    border-color: black;
 }
-.other {
-    background-color: green;
-}
-
 
 </style>
