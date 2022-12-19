@@ -547,6 +547,9 @@ export default {
               '&format=json&limit=10&accept-language=en';
             this.getJSON(url).then( (data) => {
                 console.log(data);
+                var myIcon = L.icon({
+                    markerColor: 'red'
+                });
                 var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);
                 /*addPopups(data[0].lat, data[0].lon, event.date, event.time, event.incident);*/
             }).catch((error) => {
@@ -631,6 +634,58 @@ export default {
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
 
+        var marker = L.marker([44.942068, -93.020521],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker.bindPopup('Number of incidents is 16,308');
+
+        var marker1 = L.marker([44.931244, -93.079578],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker1.bindPopup('Number of incidents is 23,272');
+
+        var marker2 = L.marker([44.956192, -93.060189],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker2.bindPopup('Number of incidents is 21,047');
+
+        var marker3 = L.marker([44.978883, -93.068163],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker3.bindPopup('Number of incidents is 36,817');
+
+        var marker4 = L.marker([44.975766, -93.113887],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker4.bindPopup('Number of incidents is 36,152');
+
+        var marker5 = L.marker([44.959639, -93.121271],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker5.bindPopup('Number of incidents is 36,320');
+
+        var marker6 = L.marker([44.930276, -93.119911],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker6.bindPopup('Number of incidents is 16,986');
+
+        var marker7 = L.marker([44.982752, -93.147910],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker7.bindPopup('Number of incidents is 14,291');
+
+        var marker8 = L.marker([44.963631, -93.167548],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker8.bindPopup('Number of incidents is 20,130');
+
+        var marker9 = L.marker([44.973971, -93.197965],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker9.bindPopup('Number of incidents is 9,397');
+
+        var marker10 = L.marker([44.949043, -93.178261],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker10.bindPopup('Number of incidents is 29,392');
+
+        var marker11 = L.marker([44.934848, -93.176736],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker11.bindPopup('Number of incidents is 13,430');
+
+        var marker12 = L.marker([44.913106, -93.170779],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker12.bindPopup('Number of incidents is 18,554');
+
+        var marker13 = L.marker([44.937705, -93.136997],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker13.bindPopup('Number of incidents is 8,613');
+
+        var marker14 = L.marker([44.949203, -93.093739],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker14.bindPopup('Number of incidents is 45,287');
+
+        var marker15 = L.marker([44.977413, -93.025156],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker15.bindPopup('Number of incidents is 23,120');
+
+        var marker16 = L.marker([44.947700, -93.128505],{opacity: 0.7}).addTo(this.leaflet.map);
+        marker16.bindPopup('Number of incidents is 22,573');
+
+
         let codePromise = this.getJSON('http://localhost:8000/codes');
         let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
         let incidentPromise = this.getJSON('http://localhost:8000/incidents');
@@ -655,7 +710,7 @@ export default {
             console.log('Error:', error);
         });
 
-        this.getJSON('http://localhost:8000/incidents').then((data) => {
+        /*this.getJSON('http://localhost:8000/incidents').then((data) => {
             this.incidents = data;
             //loop over incidents to count number of crimes with this.incidents.neighborhood_number, \
             //17 counters to ocunt for each neighborhood
@@ -666,13 +721,15 @@ export default {
                 neighborhood_array[this.incidents[i].neighborhood_number - 1] ++;
             }
             console.log(neighborhood_array);
+            var popup = L.popup().setContent("I am a standalone popup.");
             for (i=0; i < 17; i++){
-                this.leaflet.neighborhood_markers[i].marker.setPopupContent(this.leaflet.neighborhood_markers[i].name + "<br/>" + neighborhood_array[i]);
+                this.leaflet.neighborhood_markers[i].marker.bindPopup(popup).openPopup();
+                /*this.leaflet.neighborhood_markers[i].marker.Popup(this.leaflet.neighborhood_markers[i].name + "<br/>" + neighborhood_array[i]).openPopup();*/
+                /*this.leaflet.neighborhood_markers[i].marker.setPopupContent(this.leaflet.neighborhood_markers[i].name + "<br/>" + neighborhood_array[i]);
             }
-            //also do this when implementing other UI features since this only loads for first stuff
         }).catch((error) => {
             console.log('Error:', error);
-        })
+        })*/
 
         /*for(i=0;i<this.neighborhoods.length;i++) {
             var marker = L.marker([neighborhoods[i].lat, neighborhoods[i].lon]);
@@ -946,8 +1003,12 @@ export default {
                     <h1 class="cell auto names">Findings</h1>
                     <br>
                     <ol>
-                        <li>Homicide was the most recent crime committed.</li>
+                        <li>Burglary was the most recent crime committed.</li>
+                        <li>Theft was the first recorded crime in the database.</li>
                         <li>Community engagements occurred more frequently than expected.</li>
+                        <li>Capitol River had the most crimes with 45,287!</li>
+                        <li>The neighborhood with the fewest number of crimes is Summit Hill with 8,613.</li>
+                        <li>We were surprised to find over 22,000 crimes were committed near campus.</li>
                     </ol>                    
                     <br>
                 </div>
