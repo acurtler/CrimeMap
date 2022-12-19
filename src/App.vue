@@ -63,7 +63,7 @@ export default {
                     {location: [44.942068, -93.020521], marker: "Conway/Battlecreek/Highwood"},
                     {location: [44.977413, -93.025156], marker: "Greater East Side"},
                     {location: [44.931244, -93.079578], marker: "West Side"},
-                    {location: [44.956192, -93.060189], marker: "Dayton's Bluff"},
+                    {location: [44.956192, -93.060189], marker: "Dayton\'s Bluff"},
                     {location: [44.978883, -93.068163], marker: "Payne/Phalen"},
                     {location: [44.975766, -93.113887], marker: "North End"},
                     {location: [44.959639, -93.121271], marker: "Thomas/Dale(Frogtown)"},
@@ -94,13 +94,11 @@ export default {
             this.view = 'about';
         },
 
-        
         setFilter(event) {
             let codePromise = this.getJSON('http://localhost:8000/codes');
             let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
             let incidentPromise = this.getJSON('http://localhost:8000/incidents');
 
-            console.log('checked neighborhoods: ' + this.checkedNeighborhoods);
             let filtered_neighborhoods = "";
             let n_count = 0;
             for (let i=0; i<this.checkedNeighborhoods.length; i++) {
@@ -221,17 +219,10 @@ export default {
                         filtered_neighborhoods = filtered_neighborhoods + "17";
                         n_count++;
                     }
-                
-                    /*let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods?name='+this.neighborhoods[i]);*/
                 }
             }
 
-            console.log("neighborhood numbers: " + filtered_neighborhoods);
-
-            console.log("homicide: " + this.murder);
             let filtered_codes = "";
-
-            console.log('value is ' + this.checkedIncidents);
             let count = 0;
             for (let i=0; i<this.checkedIncidents.length; i++) {
                 if (this.checkedIncidents[i] == true) {
@@ -340,14 +331,7 @@ export default {
                 }
             }
 
-            
-
             let incident_url = "http://localhost:8000/incidents";
-
-
-
-            console.log("filtered codes are " + filtered_codes);
-            console.log("max is " + this.max);
             //if there is a code filter
             if (filtered_codes.length > 0 ) {
                 incident_url = incident_url + "?code=" + filtered_codes;
@@ -489,7 +473,6 @@ export default {
                 incidentPromise=this.getJSON(incident_url);
             }
 
-
             Promise.all([codePromise, neighborhoodPromise, incidentPromise]).then((results) => {
                 this.codes = results[0];
                 this.neighborhoods = results[1];
@@ -504,21 +487,13 @@ export default {
             let url = 'https://nominatim.openstreetmap.org/search?q=' + location.value + ',St.Paul,MN' +
               '&format=json&limit=1&accept-language=en';
               this.getJSON(url).then( (data) => {
-                    console.log('longitude is '+ data[0].lon);
-                    console.log(data);
                     let lat = data[0].lat;
                     let lon = data[0].lon;
-                    // use data and this.leaflet.map
-                    /*var marker = L.marker([data[0].lat, data[0].lon],{}).addTo(this.leaflet.map);*/
-                    /*this.leaflet.center([data[0].lat, data[0].lon], 1);*/
                     this.leaflet.map = this.leaflet.map.setView([data[0].lat, data[0].lon], 15);
                     var marker = L.marker([lat, lon],{}).addTo(this.leaflet.map);
-                    /*this.leaflet.map.flyTo([lat, lon], zoom);*/
                     this.leaflet.map.on('moveend', function() {
                         let center = this.leaflet.map.getCenter();
-                        console.log(center);
                     });
-                    /*this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);*/
               }).catch((error) => {
                     console.log(error);
               });
@@ -548,12 +523,10 @@ export default {
             }
             let full_street = number + ' ' + street;
             let final_street = full_street.toLocaleLowerCase();
-            console.log(final_street);
 
             let url = 'https://nominatim.openstreetmap.org/search?q=' + final_street + ',St.Paul,MN' +
               '&format=json&limit=10&accept-language=en';
             this.getJSON(url).then( (data) => {
-                console.log(data);
                 var myIcon = L.icon({
                     markerColor: 'red'
                 });
@@ -567,7 +540,6 @@ export default {
                 });
                 var container = L.DomUtil.create('div'),
                 deleteBtn = this.createButton('Delte this incident from table', container);
-                /*div.innerHTML = ''+deleteBtn+ '&nbsp;&nbsp;&nbsp;&nbsp;';*/
                 var marker = L.marker([data[0].lat, data[0].lon],{icon: greenIcon}).addTo(this.leaflet.map);
                 marker.bindPopup(event.incident + "<br>" + "Date of incident: " + event.date + "<br>" + "Time of incident: " + event.time);
                 L.DomEvent.on(deleteBtn, 'click', () => {
@@ -580,7 +552,6 @@ export default {
         },
 
         newIncident(event) {
-            console.log(this.new_incident);
             if(this.new_incident.case_number == '' || this.new_incident.code == '' || this.new_incident.block == '' || this.new_incident.date == '' || this.new_incident.time == '' || this.new_incident.neighborhood_number == '' || this.new_incident.police_grid == '' || this.new_incident.incident == '') {
                 alert("Error: not a valid entry");
             }
@@ -598,9 +569,7 @@ export default {
             alert("Deleting incident...");
             let delete_url = "http://localhost:8000/remove-incident";
             this.delete_incident.case_number = event;
-            /*element.addEventListener("click", remove_incident);*/
             this.uploadJSON('DELETE', delete_url, this.delete_incident).then( (data) => {
-                console.log(data);
                 this.incidents.splice(index, 1);
             }).catch((error) => {
                 console.log(error);
@@ -663,17 +632,6 @@ export default {
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
 
-        /*function onMoveEnd(event) {
-            var bounds = event.target.getBounds();
-            this.leaflet.map = L.map('leafletmap').setView([this.leaflet.center.lat, this.leaflet.center.lng], this.leaflet.zoom);
-            let center = this.leaflet.map.getCenter();
-            console.log(center);
-	        document.getElementById("location").value = bounds;
-        }
-
-        this.leaflet.map.on('zoomend', onMoveEnd);*/
-        
-
         var marker = L.marker([44.942068, -93.020521],{}).addTo(this.leaflet.map);
         marker.bindPopup('Number of incidents is 16,308');
 
@@ -725,19 +683,10 @@ export default {
         var marker16 = L.marker([44.947700, -93.128505],{}).addTo(this.leaflet.map);
         marker16.bindPopup('Number of incidents is 22,574');
 
-
         let codePromise = this.getJSON('http://localhost:8000/codes');
         let neighborhoodPromise = this.getJSON('http://localhost:8000/neighborhoods');
         let incidentPromise = this.getJSON('http://localhost:8000/incidents');
         let geoPromise = this.getJSON('/data/StPaulDistrictCouncil.geojson');
-
-        let url = "http://localhost:8000/incidents"
-
-        /*for (let i=0; i<this.checkedNeighborhoods.length; i++) {
-            if (this.checkedNeighborhoods[i] = 'true') {
-
-            }
-        }*/
 
         Promise.all([codePromise, neighborhoodPromise, incidentPromise, geoPromise]).then((results) => {
             this.codes = results[0];
@@ -749,54 +698,6 @@ export default {
         }).catch((error) => {
             console.log('Error:', error);
         });
-
-        /*this.getJSON('http://localhost:8000/incidents').then((data) => {
-            this.incidents = data;
-            //loop over incidents to count number of crimes with this.incidents.neighborhood_number, \
-            //17 counters to ocunt for each neighborhood
-            let i;
-            let neighborhood_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            for (i=0; i < this.incidents.length; i++){
-                //check neighborhood_number
-                neighborhood_array[this.incidents[i].neighborhood_number - 1] ++;
-            }
-            console.log(neighborhood_array);
-            var popup = L.popup().setContent("I am a standalone popup.");
-            for (i=0; i < 17; i++){
-                this.leaflet.neighborhood_markers[i].marker.bindPopup(popup).openPopup();
-                /*this.leaflet.neighborhood_markers[i].marker.Popup(this.leaflet.neighborhood_markers[i].name + "<br/>" + neighborhood_array[i]).openPopup();*/
-                /*this.leaflet.neighborhood_markers[i].marker.setPopupContent(this.leaflet.neighborhood_markers[i].name + "<br/>" + neighborhood_array[i]);
-            }
-        }).catch((error) => {
-            console.log('Error:', error);
-        })*/
-
-        /*for(i=0;i<this.neighborhoods.length;i++) {
-            var marker = L.marker([neighborhoods[i].lat, neighborhoods[i].lon]);
-            marker.addTo(this.leaflet.map);
-            marker.bindPopup(neighborhoods[i].incidents.length);
-        }*/
-
-        /*this.getJSON('http://localhost:8000/codes').then((result) => {
-            this.codes = result;
-        }).catch((error) => {
-            console.log('Error:', error);
-        });
-
-        this.getJSON('http://localhost:8000/codes').then((result) => {
-            this.codes = result;
-        }).catch((error) => {
-            console.log('Error:', error);
-        });
-
-        this.getJSON('/data/StPaulDistrictCouncil.geojson').then((result) => {
-            // St. Paul GeoJSON
-            $(result.features).each((key, value) => {
-                district_boundary.addData(value);
-            });
-        }).catch((error) => {
-            console.log('Error:', error);
-        });*/
     }
 }
 </script>
@@ -1107,5 +1008,4 @@ export default {
     border-style: solid;
     border-color: rgb(143, 143, 250);
 }
-
 </style>
