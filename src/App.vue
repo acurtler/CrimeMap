@@ -976,7 +976,7 @@ export default {
                 <div class="cell small-4 text-center">
                     <h1 class="cell auto names">Lizzie P.</h1>
                     <br>
-                    <img src="../src/pictureofLizzie.jpg" alt="Picture of Lizzie"/>
+                    <img src="../src/pictureofLizzie.jpg" alt="Picture of Lizzie P."/>
                     <br>
                     <br>
                     <p>Hello! I am a junior at St. Thomas studying Applied Math with a minor in Computer Science.</p>
@@ -992,10 +992,10 @@ export default {
                 <div class="cell small-4 text-center">
                     <h1 class="cell auto names">Lizzie M.</h1>
                     <br>
-                    <img src="" alt="Picture of Lizzie"/>
+                    <img src="../src/lizzie.jpg" alt="Picture of Lizzie M."/>
                     <br>
                     <br>
-                    <p>Hello</p>
+                    <p>Hi! I'm a senior at St. Thomas majoring in Computer Science. </p>
                 </div>
         </div>
         <div class="grid-x grid-padding-x">
