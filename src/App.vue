@@ -632,6 +632,7 @@ export default {
             });
         }
     },
+ 
     mounted() {
         this.leaflet.map = L.map('leafletmap').setView([this.leaflet.center.lat, this.leaflet.center.lng], this.leaflet.zoom);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -642,6 +643,16 @@ export default {
         this.leaflet.map.setMaxBounds([[44.883658, -93.217977], [45.008206, -92.993787]]);
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
+
+        function onMoveEnd(event) {
+            var bounds = event.target.getBounds();
+            let center = this.leaflet.map.getCenter();
+            console.log(center);
+	        document.getElementById("location").value = bounds;
+        }
+
+        this.leaflet.map.on('zoomend', onMoveEnd);
+        
 
         var marker = L.marker([44.942068, -93.020521],{opacity: 0.7}).addTo(this.leaflet.map);
         marker.bindPopup('Number of incidents is 16,308');
