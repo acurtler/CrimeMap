@@ -60,23 +60,23 @@ export default {
                     se: {lat: 44.883658, lng: -92.993787}
                 },
                 neighborhood_markers: [
-                    {location: [44.942068, -93.020521], marker: null},
-                    {location: [44.977413, -93.025156], marker: null},
-                    {location: [44.931244, -93.079578], marker: null},
-                    {location: [44.956192, -93.060189], marker: null},
-                    {location: [44.978883, -93.068163], marker: null},
-                    {location: [44.975766, -93.113887], marker: null},
-                    {location: [44.959639, -93.121271], marker: null},
-                    {location: [44.947700, -93.128505], marker: null},
-                    {location: [44.930276, -93.119911], marker: null},
-                    {location: [44.982752, -93.147910], marker: null},
-                    {location: [44.963631, -93.167548], marker: null},
-                    {location: [44.973971, -93.197965], marker: null},
-                    {location: [44.949043, -93.178261], marker: null},
-                    {location: [44.934848, -93.176736], marker: null},
-                    {location: [44.913106, -93.170779], marker: null},
-                    {location: [44.937705, -93.136997], marker: null},
-                    {location: [44.949203, -93.093739], marker: null}
+                    {location: [44.942068, -93.020521], marker: "Conway/Battlecreek/Highwood"},
+                    {location: [44.977413, -93.025156], marker: "Greater East Side"},
+                    {location: [44.931244, -93.079578], marker: "West Side"},
+                    {location: [44.956192, -93.060189], marker: "Dayton's Bluff"},
+                    {location: [44.978883, -93.068163], marker: "Payne/Phalen"},
+                    {location: [44.975766, -93.113887], marker: "North End"},
+                    {location: [44.959639, -93.121271], marker: "Thomas/Dale(Frogtown)"},
+                    {location: [44.947700, -93.128505], marker: "Summit/University"},
+                    {location: [44.930276, -93.119911], marker: "West Seventh"},
+                    {location: [44.982752, -93.147910], marker: "Como"},
+                    {location: [44.963631, -93.167548], marker: "Hamline/Midway"},
+                    {location: [44.973971, -93.197965], marker: "St. Anthony"},
+                    {location: [44.949043, -93.178261], marker: "Union Park"},
+                    {location: [44.934848, -93.176736], marker: "Macalaster Groveland"},
+                    {location: [44.913106, -93.170779], marker: "Highland"},
+                    {location: [44.937705, -93.136997], marker: "Summit Hill"},
+                    {location: [44.949203, -93.093739], marker: "Capitol River"}
                 ] 
             },
         };
@@ -657,6 +657,25 @@ export default {
         }).catch((error) => {
             console.log('Error:', error);
         });
+
+        this.getJSON('http://localhost:8000/incidents').then((data) => {
+            this.incidents = data;
+            //loop over incidents to count number of crimes with this.incidents.neighborhood_number, \
+            //17 counters to ocunt for each neighborhood
+            let i;
+            let neighborhood_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            for (i=0; i < this.incidents.length; i++){
+                //check neighborhood_number
+                neighborhood_array[this.incidents[i].neighborhood_number - 1] ++;
+            }
+            console.log(neighborhood_array);
+            for (i=0; i < 17; i++){
+                this.leaflet.neighborhood_markers[i].marker.setPopupContent(this.leaflet.neighborhood_markers[i].name + "<br/>" + neighborhood_array[i]);
+            }
+            //also do this when implementing other UI features since this only loads for first stuff
+        }).catch((error) => {
+            console.log('Error:', error);
+        })
 
         /*for(i=0;i<this.neighborhoods.length;i++) {
             var marker = L.marker([neighborhoods[i].lat, neighborhoods[i].lon]);
