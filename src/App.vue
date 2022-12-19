@@ -598,7 +598,6 @@ export default {
             alert("Deleting incident...");
             let delete_url = "http://localhost:8000/remove-incident";
             this.delete_incident.case_number = event;
-            console.log('event is ' + this.delete_incident.case_number);
             /*element.addEventListener("click", remove_incident);*/
             this.uploadJSON('DELETE', delete_url, this.delete_incident).then( (data) => {
                 console.log(data);
@@ -664,66 +663,67 @@ export default {
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
 
-        function onMoveEnd(event) {
+        /*function onMoveEnd(event) {
             var bounds = event.target.getBounds();
+            this.leaflet.map = L.map('leafletmap').setView([this.leaflet.center.lat, this.leaflet.center.lng], this.leaflet.zoom);
             let center = this.leaflet.map.getCenter();
             console.log(center);
 	        document.getElementById("location").value = bounds;
         }
 
-        this.leaflet.map.on('zoomend', onMoveEnd);
+        this.leaflet.map.on('zoomend', onMoveEnd);*/
         
 
-        var marker = L.marker([44.942068, -93.020521],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker = L.marker([44.942068, -93.020521],{}).addTo(this.leaflet.map);
         marker.bindPopup('Number of incidents is 16,308');
 
-        var marker1 = L.marker([44.931244, -93.079578],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker1 = L.marker([44.931244, -93.079578],{}).addTo(this.leaflet.map);
         marker1.bindPopup('Number of incidents is 23,272');
 
-        var marker2 = L.marker([44.956192, -93.060189],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker2 = L.marker([44.956192, -93.060189],{}).addTo(this.leaflet.map);
         marker2.bindPopup('Number of incidents is 21,047');
 
-        var marker3 = L.marker([44.978883, -93.068163],{opacity: 0.7}).addTo(this.leaflet.map);
-        marker3.bindPopup('Number of incidents is 36,817');
+        var marker3 = L.marker([44.978883, -93.068163],{}).addTo(this.leaflet.map);
+        marker3.bindPopup('Number of incidents is 36,819');
 
-        var marker4 = L.marker([44.975766, -93.113887],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker4 = L.marker([44.975766, -93.113887],{}).addTo(this.leaflet.map);
         marker4.bindPopup('Number of incidents is 36,152');
 
-        var marker5 = L.marker([44.959639, -93.121271],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker5 = L.marker([44.959639, -93.121271],{}).addTo(this.leaflet.map);
         marker5.bindPopup('Number of incidents is 36,320');
 
-        var marker6 = L.marker([44.930276, -93.119911],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker6 = L.marker([44.930276, -93.119911],{}).addTo(this.leaflet.map);
         marker6.bindPopup('Number of incidents is 16,986');
 
-        var marker7 = L.marker([44.982752, -93.147910],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker7 = L.marker([44.982752, -93.147910],{}).addTo(this.leaflet.map);
         marker7.bindPopup('Number of incidents is 14,291');
 
-        var marker8 = L.marker([44.963631, -93.167548],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker8 = L.marker([44.963631, -93.167548],{}).addTo(this.leaflet.map);
         marker8.bindPopup('Number of incidents is 20,130');
 
-        var marker9 = L.marker([44.973971, -93.197965],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker9 = L.marker([44.973971, -93.197965],{}).addTo(this.leaflet.map);
         marker9.bindPopup('Number of incidents is 9,397');
 
-        var marker10 = L.marker([44.949043, -93.178261],{opacity: 0.7}).addTo(this.leaflet.map);
-        marker10.bindPopup('Number of incidents is 29,392');
+        var marker10 = L.marker([44.949043, -93.178261],{}).addTo(this.leaflet.map);
+        marker10.bindPopup('Number of incidents is 29,393');
 
-        var marker11 = L.marker([44.934848, -93.176736],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker11 = L.marker([44.934848, -93.176736],{}).addTo(this.leaflet.map);
         marker11.bindPopup('Number of incidents is 13,430');
 
-        var marker12 = L.marker([44.913106, -93.170779],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker12 = L.marker([44.913106, -93.170779],{}).addTo(this.leaflet.map);
         marker12.bindPopup('Number of incidents is 18,554');
 
-        var marker13 = L.marker([44.937705, -93.136997],{opacity: 0.7}).addTo(this.leaflet.map);
-        marker13.bindPopup('Number of incidents is 8,613');
+        var marker13 = L.marker([44.937705, -93.136997],{}).addTo(this.leaflet.map);
+        marker13.bindPopup('Number of incidents is 8,614');
 
-        var marker14 = L.marker([44.949203, -93.093739],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker14 = L.marker([44.949203, -93.093739],{}).addTo(this.leaflet.map);
         marker14.bindPopup('Number of incidents is 45,287');
 
-        var marker15 = L.marker([44.977413, -93.025156],{opacity: 0.7}).addTo(this.leaflet.map);
+        var marker15 = L.marker([44.977413, -93.025156],{}).addTo(this.leaflet.map);
         marker15.bindPopup('Number of incidents is 23,120');
 
-        var marker16 = L.marker([44.947700, -93.128505],{opacity: 0.7}).addTo(this.leaflet.map);
-        marker16.bindPopup('Number of incidents is 22,573');
+        var marker16 = L.marker([44.947700, -93.128505],{}).addTo(this.leaflet.map);
+        marker16.bindPopup('Number of incidents is 22,574');
 
 
         let codePromise = this.getJSON('http://localhost:8000/codes');
@@ -1036,7 +1036,9 @@ export default {
                 <div class="cell small-4 text-center">
                     <h1 class="cell auto names">Video Demo</h1>
                     <br>
-                    <p ></p>
+                    <video width="400rem" src="../src/video5220072833.mp4" controls>
+                        Video Demo
+                    </video>
                     <br>
                 </div>
                 <div class="cell small-4 text-center">
