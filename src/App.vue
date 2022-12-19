@@ -524,6 +524,13 @@ export default {
               });
         },
 
+        createButton(label, container) {
+            var btn = L.DomUtil.create('button', '', container);
+            btn.setAttribute('type', 'button');
+            btn.innerHTML = label;
+            return btn;
+            },
+
         markIncident(event) {
             let event_split = event.block.split(' ');
             let address_number = event_split[0];
@@ -558,20 +565,33 @@ export default {
                 popupAnchor: [1, -34],
                 shadowSize: [41, 41]
                 });
+                var container = L.DomUtil.create('div'),
+                deleteBtn = this.createButton('Delte this incident from table', container);
+                /*div.innerHTML = ''+deleteBtn+ '&nbsp;&nbsp;&nbsp;&nbsp;';*/
                 var marker = L.marker([data[0].lat, data[0].lon],{icon: greenIcon}).addTo(this.leaflet.map);
                 marker.bindPopup(event.incident + "<br>" + "Date of incident: " + event.date + "<br>" + "Time of incident: " + event.time);
+                L.DomEvent.on(deleteBtn, 'click', () => {
+                    this.remove(item.case_number);
+                });
+                
             }).catch((error) => {
                     console.log(error);
             });
         },
 
         newIncident(event) {
+            console.log(this.new_incident);
+            if(this.new_incident.case_number == '' || this.new_incident.code == '' || this.new_incident.block == '' || this.new_incident.date == '' || this.new_incident.time == '' || this.new_incident.neighborhood_number == '' || this.new_incident.police_grid == '' || this.new_incident.incident == '') {
+                alert("Error: not a valid entry");
+            }
+            else{
             let url = "http://localhost:8000/new-incident";
             this.uploadJSON('PUT', url, this.new_incident).then( (data) => {
             }).catch((error) => {
                 console.log(error);
             });
             alert("Thanks for your submission. New incident has been added.");
+        }
         },
 
         remove(event, index) {
