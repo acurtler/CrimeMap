@@ -514,11 +514,10 @@ export default {
                     this.leaflet.map = this.leaflet.map.setView([data[0].lat, data[0].lon], 15);
                     var marker = L.marker([lat, lon],{}).addTo(this.leaflet.map);
                     /*this.leaflet.map.flyTo([lat, lon], zoom);*/
-                    /*move(event) {
-                        document.getElementById("lookup").placeholder = "Enter Location";
-
-                    }*/
-                    this.leaflet.map('moveend', move);
+                    this.leaflet.map.on('moveend', function() {
+                        let center = this.leaflet.map.getCenter();
+                        console.log(center);
+                    });
                     /*this.leaflet.map = this.leaflet.map.panTo([this.leaflet.center.lat, this.leaflet.center.lon], 1);*/
               }).catch((error) => {
                     console.log(error);
@@ -556,14 +555,12 @@ export default {
         },
 
         newIncident(event) {
-            console.log(event);
             let url = "http://localhost:8000/new-incident";
             this.uploadJSON('PUT', url, this.new_incident).then( (data) => {
-                console.log(data);
-                alert('Thanks for your submission.');
             }).catch((error) => {
                 console.log(error);
             });
+            alert("Thanks for your submission. New incident has been added.");
         },
 
         remove(event, index) {
@@ -837,7 +834,7 @@ export default {
 
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <div>
+                <div class="cell small-4">
                         <span>Case Number</span><br>
                         <input id="case_number" type="text" placeholder="Example: 11111111" v-model="new_incident.case_number"><label for="case_number"></label>
                         <br>
@@ -864,8 +861,7 @@ export default {
                         <span>Block</span><br>
                         <input id="block" type="text" placeholder="Example: THOMAS AV & VICTORIA" v-model="new_incident.block"/>
                         <br>
-                        <span>new incident has: {{ new_incident }}</span>
-
+                        
                         <button id="lookup" class="cell small-3 button" type="button" @click="newIncident">Submit</button>
                 </div>
             </div>
@@ -876,25 +872,65 @@ export default {
         <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <h1 class="cell auto text-center">About the Project</h1>
+                <h1 class="cell auto text-center project">About the Project</h1>
             </div>
         </div>
+        <br>
         <div class="grid-x grid-padding-x">
                 <div class="cell small-4 text-center">
-                    <h1 class="cell auto">Lizzie P.</h1>
-                    <img src="" alt="Picture of Lizzie"/>
+                    <h1 class="cell auto names">Lizzie P.</h1>
+                    <br>
+                    <img src="../src/pictureofLizzie.jpg" alt="Picture of Lizzie"/>
+                    <br>
                     <br>
                     <p>Hello! I am a junior at St. Thomas studying Applied Math with a minor in Computer Science.</p>
                 </div>
                 <div class="cell small-4 text-center">
-                    <h1 class="cell auto">Anna C.</h1>
+                    <h1 class="cell auto names">Anna C.</h1>
+                    <br>
                     <img src="" alt="Picture of Anna"/>
+                    <br>
+                    <br>
                     <p>Hello</p>
                 </div>
                 <div class="cell small-4 text-center">
-                    <h1 class="cell auto">Lizzie M.</h1>
+                    <h1 class="cell auto names">Lizzie M.</h1>
+                    <br>
                     <img src="" alt="Picture of Lizzie"/>
+                    <br>
+                    <br>
                     <p>Hello</p>
+                </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+                <div class="cell small-4 text-center">
+                    <h1 class="cell auto names">Tools</h1>
+                    <br>
+                    <ul class="text-center">
+                        <li>Leaflet</li>
+                        <li>Nominatim</li>
+                        <li>Vue</li>
+                        <li>HTML</li>
+                        <li>Javascript</li>
+                        <li>CSS</li>
+                    </ul>
+                    <br>
+                    <p></p>
+                </div>
+                <div class="cell small-4 text-center">
+                    <h1 class="cell auto names">Video Demo</h1>
+                    <br>
+                    <p ></p>
+                    <br>
+                </div>
+                <div class="cell small-4 text-center">
+                    <h1 class="cell auto names">Findings</h1>
+                    <br>
+                    <ol>
+                        <li>Homicide was the most recent crime committed.</li>
+                        <li>Community engagements occurred more frequently than expected.</li>
+                    </ol>                    
+                    <br>
                 </div>
         </div>
     </div>
@@ -936,6 +972,18 @@ export default {
     border-style: solid;
     border-color: black;
     cursor: pointer;
+}
+.names {
+    background-color: rgb(143, 143, 250);
+    border-radius: .4rem;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 2rem;
+}
+.project {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border-style: solid;
+    border-color: rgb(143, 143, 250);
 }
 
 </style>
