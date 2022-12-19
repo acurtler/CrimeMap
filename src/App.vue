@@ -1004,10 +1004,10 @@ export default {
                 <div class="cell small-4 text-center">
                     <h1 class="cell auto names">Anna C.</h1>
                     <br>
-                    <img src="" alt="Picture of Anna"/>
+                    <img src="../src/anna.jpg" alt="Picture of Anna"/>
                     <br>
                     <br>
-                    <p>Hello</p>
+                    <p>Hello! I am a junior at St. Thomas majoring in Computer Science and Environmental Science.</p>
                 </div>
                 <div class="cell small-4 text-center">
                     <h1 class="cell auto names">Lizzie M.</h1>
