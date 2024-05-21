@@ -13,14 +13,14 @@ To run this project, follow these steps:
    - Open a terminal on your local machine.
    - Clone the forked repository using the following command:
      ```bash
-     git clone https://github.com/your-username/crime-map-project.git
+     git clone https://github.com/your-username/CrimeMap.git
      ```
      Replace `your-username` with your GitHub username.
 
 3. **Navigate to the Project Directory**
    - Change into the project directory:
      ```bash
-     cd crime-map-project
+     cd CrimeMap
      ```
 
 4. **Install Dependencies**
