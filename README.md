@@ -27,20 +27,15 @@ To run this project, follow these steps:
    - Ensure you have Node.js and npm installed.
    - Install the required dependencies:
      ```bash
-     npm install
+     npm install --legacy-peer-deps
      ```
 
 5. **Run the Project**
    - Start the application:
      ```bash
-     npm start
+     npm run dev
      ```
-   - Open your web browser and go to `http://localhost:3000` to view the application.
+   - Open your web browser and navigate to the local host URL provided by the terminal output to view the application.
 
-
-## Additional Information
-
-- **Leaflet API**: The Leaflet API is used to create interactive maps. For more information, visit the [Leaflet documentation](https://leafletjs.com/).
-- **St. Paul Crime Data**: The crime data is contained in the 'data' subfolder. 
 
 
