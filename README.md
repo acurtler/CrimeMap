@@ -41,6 +41,6 @@ To run this project, follow these steps:
 ## Additional Information
 
 - **Leaflet API**: The Leaflet API is used to create interactive maps. For more information, visit the [Leaflet documentation](https://leafletjs.com/).
-- **St. Paul Crime Data**: The crime data is contained in the 
+- **St. Paul Crime Data**: The crime data is contained in the 'data' subfolder. 
 
 
